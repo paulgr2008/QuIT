@@ -1,0 +1,135 @@
+
+QPushButton#connectBtn 
+{ 
+    background: qlineargradient(x1:0,y1:0,x2:0,y2:1, stop:0 #02d39e  ,stop: 1 #013e2f);
+    border-width: 1px; 
+    border-color: #274e13; 
+    border-style: solid; 
+    padding: 5px; 
+    padding-left:10px; 
+    padding-right:10px; 
+    border-radius: 71px;
+	width: 145px;
+	height: 145px;
+	font: bold 20px;
+	color: white;
+}
+QPushButton#connectBtn:hover
+{
+	background: qlineargradient(x1:0,y1:0,x2:0,y2:1, stop:0 #00f0b3  ,stop: 1 #013e2f);
+   
+} 
+
+/*
+QPushButton#connectBtn 
+{ 
+    background: #013e2f;
+    border-width: 1px; 
+    border-color: #274e13; 
+    border-style: solid; 
+    padding: 5px; 
+    padding-left:10px; 
+    padding-right:10px; 
+    border-radius: 71px;
+	width: 145px;
+	height: 145px;
+	font: bold 20px;
+	color: white;
+}
+QPushButton#connectBtn:hover
+{
+	background: #013e2f;
+    
+} 
+*/
+QPushButton#connectBtn:pressed 
+{
+    background:qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 #00f0b3  ,stop: 1 #013e2f); 
+	border-width: 2px; 
+    border-color: #0f0f0f;
+	
+}
+QGroupBox#group
+{
+	background:white;
+	border-width: 2px;
+	border-color: #ffffff;
+	padding: 2px;
+}
+
+QLabel#labelConnectedPort
+{
+	font: 12px;
+	color:white;
+}
+/*
+QWidget#hvacLine
+{
+	background: rgb(240,240,240);
+}
+
+QWidget#netSet
+{
+	background: rgb(240,240,240);
+}
+
+*/
+
+
+
+/*#group .QGroupBox {background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1,stop:0 #00f0b3 ,stop: 1 #013e2f);
+                          border-top: 2px solid #f0f0f0;
+                          padding-top: 2px;
+                          padding-bottom: 2px;
+                          padding-right:4px;
+						  }
+
+
+
+
+
+#comboBox_1,#comboBox_2,#comboBox_3,#comboBox_4,#comboBox_5,#comboBox_6,#comboBox_7,#comboBox_8
+{
+	background: white
+}
+
+/*background:qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 #00f0b3  ,stop: 0.5 #02795c, stop: 1 #00f0b3); 	*/
+
+/*
+QPushButton#connectBtn
+{	
+	border-image:url(:/images/buttonGreen.png) 7px;
+	border-width: 7px;
+	border-color: black;
+	width: 145px;
+	height: 145px;
+	border-radius: 71px;
+	font: bold 20px;
+	color: white;
+
+		
+}
+QPushButton#connectBtn:pressed {
+    border-image:url(:/images/buttonGreenPressed.png) 7px;
+	border-width: 7px;
+}
+
+QPushButton#connectBtn:checked {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #f0eeaa, stop: 1 #eeaa88);
+
+}
+
+QPushButton#connectBtn:hover:!pressed
+{
+	border-image:url(:/images/buttonGreenHover.png) 7px;
+	border-width: 7px;
+}
+*/
+
+
+
+/*qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #f6fcff, stop: 1.0 #a0b0d0);
+	border: 1px solid #a0a0b0;
+	border-radius: 65px;*/
+
+
