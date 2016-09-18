@@ -18,6 +18,8 @@ Console::Console( QWidget *parent )
     insertPrompt(false);
     history = new QStringList;
     historyPos = 0;
+
+
 }
 
 void Console::insertPrompt( bool insertNewBlock )
