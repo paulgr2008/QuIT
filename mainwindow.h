@@ -29,7 +29,9 @@ QT_BEGIN_NAMESPACE
 class QLabel;
 class ConsoleTab;
 class ConsoleController;
+class ConsoleView;
 class IPWidget;
+class ClickableLabel;
 
 namespace Ui {
 class MainWindow;
@@ -47,7 +49,7 @@ public:
     bool initializeDeviceNotification(void);
 
 private slots:
-    void runConsole(int index);
+    void tabOperating(int index);
     void checkCustomPortName(QAction* action);
     void autoipCheckBoxState(int state);
     void handleSerialPort();
@@ -67,6 +69,10 @@ private slots:
     void handleLines(QString str);
     bool getInitInformation();
     void on_rebootBtn_clicked();
+
+    void on_consoleButton_clicked();
+protected:
+ bool eventFilter( QObject *target, QEvent *event );
 
 signals:
      void processConnect() ;
@@ -106,7 +112,7 @@ private:
     void resetSwitches();
     void switchOn(const QString row, int column, bool bit);
     void setTitle();
-
+    void setConnectButton();
     int execWarningWindow(QString warning);
     bool checkDeviceInitialState();
     void switchesHandler(const QString row, int code);
@@ -149,8 +155,8 @@ private:
     QStandardItemModel *modelIP;
     QDataWidgetMapper *mapperIP;
 
-
-
+    QGridLayout* centralLayout;
+    QGridLayout *mainLayout;
     QDataWidgetMapper *mapper;
     QMenu* portsMenu;
     QMenu* ratesMenu;
@@ -178,7 +184,11 @@ private:
     int timeoutRead;
     int echo;
     ConsoleTab* consoleTab;
+    ConsoleView* consoleView;
     ConsoleController* consoleController;
+    QPushButton *connectBtn;
+    QWidget* centralWindow;
+    QLabel* labelConnectedPort;
     //IPWidget* ipWidget;
 
     /* styles strings*/
@@ -188,6 +198,10 @@ private:
     QString switchOffStyle;
     QString switchBeginStyle;
     QString dotLabelStySheet;
+    QString connectButtonStyle;
+    QString connectButtonStyleHover;
+    QString connectButtonStylePressed;
+    QString connectedLabel;
 
 
 

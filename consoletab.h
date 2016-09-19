@@ -4,17 +4,7 @@
 #include <QObject>
 #include <QtWidgets>
 #include <QSerialPort>
-#include <QModelIndex>
-#include <console.h>
 #include <consolecontroller.h>
-
-
-class TreeModelCompleter;
-QT_BEGIN_NAMESPACE
-//class QTreeView;
-class QAbstractItemModel;
-
-QT_END_NAMESPACE
 
 class ConsoleTab : public QWidget
 {
@@ -27,16 +17,8 @@ public:
     void runConsole();
 signals:
 
-public slots:
-    //void writeData(const QByteArray &data);
-    //void readData();
-    //void setAutocomplete(int);
-
 private:
-    //QAbstractItemModel *modelFromFile(const QString& fileName);
     QSerialPort* serial;
-    //Console* console;
-    //TreeModelCompleter* completer;
     ConsoleController* cController;
     int echo;
 

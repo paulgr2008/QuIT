@@ -3,16 +3,26 @@
 
 #include <QObject>
 #include <QWidget>
+#include <QSerialPort>
+#include <consolecontroller.h>
 
 class ConsoleView : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ConsoleView(QWidget *parent = 0);
+    explicit ConsoleView(QSerialPort* serial, int echo, QWidget *parent = 0);
 
+    void setConsoleSignalConnections(bool f);
+    ConsoleController* getConsoleController() const;
+    void runConsole();
 signals:
 
 public slots:
+
+private:
+    QSerialPort* serial;
+    ConsoleController* cController;
+    int echo;
 };
 
 #endif // CONSOLEVIEW_H

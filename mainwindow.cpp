@@ -11,23 +11,20 @@
 #include "iostream"
 #include "consoleTab.h"
 #include "consolecontroller.h"
+#include "consoleview.h"
 #define CA_TOOLS
  #include "line.h"
 
 #define NAMEAPP "Quick Installation Tool"
 #define VERSION "v0.0.1b"
 
-DEFINE_GUID( GUID_DEVINTERFACE_USBDEVICE,0x4D36E978L, 0xE325, 0x11CE,0xBF,0xC1,0x08,0x00,0x2B,0xE1,0x03,0x18 );
+DEFINE_GUID( GUID_DEVINTERFACE_USBDEVICE,0x4D36E978L, 0xE325,
+             0x11CE,0xBF,0xC1,0x08,0x00,0x2B,0xE1,0x03,0x18 );
 #define VENDOR_ID 10668
 
 
 bool comparator( const QSerialPortInfo &info1, const QSerialPortInfo &info2 );
 Q_DECLARE_METATYPE(line_type_descr_t)
-
-
-//typedef line_type_descr_t *line_type_descr_ptr;
-//Q_DECLARE_METATYPE(line_type_descr_ptr)
-
 
 MainWindow::MainWindow( QWidget *parent ):QMainWindow( parent ),
             ui( new Ui::MainWindow )
@@ -41,7 +38,9 @@ MainWindow::MainWindow( QWidget *parent ):QMainWindow( parent ),
     /* List of device names in used */
     devTypeStrings<<"CoolMasterNet"<<"CoolLinkNet"<<"CoolLinkHub"<<"CoolPlug";
 
-
+    defineStyles();
+    centralWindow = ui->centralWidget;
+    setConnectButton();
 
     initializeDeviceNotification();
 
@@ -50,18 +49,19 @@ MainWindow::MainWindow( QWidget *parent ):QMainWindow( parent ),
     baudRate = ( settings->value("settings/baudrate") ).toInt();
     serial = new QSerialPort(this);
 
-    defineStyles();
+
     setupModel();
     setupConnectMenu();
     setupLinesView();
-    //setTitle();
     /* GUI on mainwindow form */
     size = new QSize( 403,309 );/* Size of window - the first appearence */
 
     setFixedSize(*size);
-    consoleTab = new ConsoleTab( serial,echo );
-    ui->tabWidget->addTab( consoleTab,tr( "Console" ) );
 
+    consoleView = new ConsoleView(serial,echo );
+
+
+    ui->consoleButton->hide();
     ui->tabWidget->hide();
     ui->deviceName->hide();
     ui->deviceVersion->hide();
@@ -84,9 +84,54 @@ void MainWindow::setTitle()
 {
     QCoreApplication::setApplicationName(NAMEAPP);
     QCoreApplication::setApplicationVersion(VERSION);
-    QString str = QCoreApplication::applicationName()+QCoreApplication::applicationVersion();
+    QString str = QCoreApplication::applicationName()+
+            QCoreApplication::applicationVersion();
     setWindowTitle(str);
 }
+
+
+void MainWindow::setConnectButton()
+{
+
+
+    connectBtn = new QPushButton(centralWindow);
+    connectBtn->setGeometry(130,64,145,145);
+    connectBtn->setText("Connect");
+    connectBtn->setAutoFillBackground(true);
+    connectBtn->setStyleSheet(connectButtonStyle);
+    connectBtn->setAttribute(Qt::WA_Hover);
+    connectBtn->installEventFilter(this);
+
+    labelConnectedPort = new QLabel(centralWindow);
+    labelConnectedPort->setGeometry(144,148,116,16);
+    labelConnectedPort->setText("Sometext");
+    labelConnectedPort->setAlignment(Qt::AlignCenter);
+    labelConnectedPort->setStyleSheet(connectedLabel);
+
+}
+
+
+ bool MainWindow::eventFilter( QObject *target, QEvent *event )
+ {
+     if(target==connectBtn)
+     {
+         QEvent::Type type = event->type();
+            switch(type){
+            case QEvent::HoverEnter:
+                connectBtn->setStyleSheet(connectButtonStyleHover);
+                break;
+            case QEvent::HoverLeave:
+                connectBtn->setStyleSheet(connectButtonStyle);
+                break;
+            case QEvent::MouseButtonPress:
+                connectBtn->setStyleSheet(connectButtonStylePressed);
+                break;
+            default:break;
+            }
+
+    }
+    return QWidget::eventFilter( target, event );
+ }
 
 /*
  * Styles list of GUI elements
@@ -104,11 +149,7 @@ void MainWindow::defineStyles()
                                 "padding-top: 2px;"
                                 "padding-bottom: 2px;"
                                 "padding-right:4px;}" );
-/*
     switchOnStyle          = tr( "border: 0px solid white;"
-                                "padding: 0px;"
-                                "background: rgb( 89, 157, 141 )" );
-*/switchOnStyle          = tr( "border: 0px solid white;"
                                "padding: 0px;"
                                "background: red" );
 
@@ -127,6 +168,50 @@ void MainWindow::defineStyles()
                               "border-left:0px solid #ffffff;"
                               "padding: 0px;"
                               "background: #ffffff" );
+    connectButtonStyle = tr( "background: qlineargradient(x1:0,y1:0,x2:0,y2:1,"
+                            "stop:0 #02d39e  ,stop: 1 #013e2f);"
+                            "border-width: 1px;"
+                            "border-color: #274e13;"
+                            "border-style: solid;"
+                            "padding: 5px; "
+                            "padding-left:10px;"
+                            "padding-right:10px;"
+                            "border-radius: 71px;"
+                            "width: 145px;"
+                            "height: 145px;"
+                            "font: bold 20px;"
+                            "color: white;");
+
+    connectButtonStyleHover = tr(" background: qlineargradient(x1:0,"
+                                 "y1:0,x2:0,y2:1, stop:0 #00f0b3  ,"
+                                 "stop: 1 #013e2f);"
+                                 "border-width: 1px;"
+                                 "border-color: #274e13;"
+                                 "border-style: solid;"
+                                 "padding: 5px; "
+                                 "padding-left:10px;"
+                                 "padding-right:10px;"
+                                 "border-radius: 71px;"
+                                 "width: 145px;"
+                                 "height: 145px;"
+                                 "font: bold 20px;"
+                                 "color: white;");
+
+
+    connectButtonStylePressed = tr("background:qlineargradient(x1:0,y1:0,x2:0,"
+                                   "y2:1,stop:0 #00f0b3  ,stop: 1 #013e2f);"
+                                   "border-width: 2px;"
+                                   "border-color: #0f0f0f;"
+                                   "border-style: solid;"
+                                   "padding: 5px; "
+                                   "padding-left:10px;"
+                                   "padding-right:10px;"
+                                   "border-radius: 71px;"
+                                   "width: 145px;"
+                                   "height: 145px;"
+                                   "font: bold 20px;"
+                                   "color: white;");
+    connectedLabel = tr("font: 12px; color:white;");
 
     /* set dot labels style of ip elements*/
     QRegExp rx( "*point*" );
@@ -181,9 +266,9 @@ void MainWindow::setupLinesView()
         QFont font ( "MS Shell Dlg2",9 );
         font.setBold(true);
         label->setFont( font );
-        label->setStyleSheet( "#group .QLabel {color: #ffffff; padding-left:10px}" );
+        label->setStyleSheet( "#group .QLabel "
+                              "{color: #ffffff; padding-left:10px}" );
     }
-
 
     /* Set line frames */
     rx.setPattern( "groupBox*" );
@@ -203,10 +288,11 @@ void MainWindow::setupLinesView()
 
     for ( int i=0; i<lineCombosList.size();i++ )
     {
-        connect( lineCombosList[i],SIGNAL( activated( QString ) ),this, SLOT( handleLines( QString ) ) );
+        connect( lineCombosList[i],SIGNAL( activated( QString ) ),
+                 this, SLOT( handleLines( QString ) ) );
         QFont font ( "MS Shell Dlg2",9 );
         lineCombosList[i]->setFont( font );
-        lineCombosList[i]->setStyleSheet( " color: #000000" );//background: white;
+        lineCombosList[i]->setStyleSheet( " color: #000000" );
         lineCombosList[i]->setEnabled(false);
         lineCombosList[i]->hide();
         lineCombosList[i]->setAccessibleName( QString( "L%1" ).arg( i+1 ) );
@@ -357,9 +443,11 @@ void MainWindow::comboBoxFilter()
         }
     }
 
-    if ( lineCombosList.at(1)->currentText().compare( "unused",Qt::CaseInsensitive ) )
+    if ( lineCombosList.at(1)->currentText()
+              .compare( "unused",Qt::CaseInsensitive ) )
         lineCombosList.at(5)->setEnabled(false);
-    else if ( lineCombosList.at(5)->currentText().compare( "unused",Qt::CaseInsensitive ) )
+    else if ( lineCombosList.at(5)->currentText()
+              .compare( "unused",Qt::CaseInsensitive ) )
         lineCombosList.at(1)->setEnabled(false);
 
     sortItems();
@@ -375,7 +463,8 @@ void MainWindow::setLinesInitialState()
     foreach( QComboBox* box, lineCombosList )
         box->clear();
 
-    for( int i=0; i<static_cast<int>( sizeof( line_types )/sizeof( line_type_descr_t ) );i++ )
+    for( int i=0; i<static_cast<int>( sizeof( line_types )
+                                      /sizeof( line_type_descr_t ) );i++ )
     {
         if ( devType == COOLINK )
             offset = 8;
@@ -390,7 +479,8 @@ void MainWindow::setLinesInitialState()
                 QVariant var = QVariant::fromValue( line_types[i] );
 
                 if( QString(line_types[i].func_str).compare("BIST") )
-                    lineCombosList.at( line )->addItem( line_types[i].ac_type_str,var );
+                    lineCombosList.at( line )->addItem( line_types[i].
+                                                        ac_type_str,var );
 
             }
         }
@@ -406,10 +496,11 @@ void MainWindow::sortItems()
 {
     foreach( QComboBox* box, lineCombosList )
     {
-            if(box->count() < 2)
-                continue;
+        if(box->count() < 2)
+            continue;
 
-            QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(box->model());
+        QStandardItemModel* model =
+                dynamic_cast<QStandardItemModel*>(box->model());
             model->sort(0);
     }
 }
@@ -629,7 +720,7 @@ void MainWindow::setPortsMenu()
     if( !portsList.count() )
     {
         portName.clear();
-        ui->labelConnectedPort->setText( "no any serial ports" );
+        labelConnectedPort->setText( "no any serial ports" );
         return;
     }
 
@@ -662,7 +753,7 @@ void MainWindow::setPortsMenu()
     /* check if any serial port is available */
     if ( !isPresented )
     {
-        ui->labelConnectedPort->setText( "no any available ports" );
+        labelConnectedPort->setText( "no any available ports" );
         portName.clear();
         return;
     }
@@ -674,7 +765,8 @@ void MainWindow::setPortsMenu()
         portName = actionsList.first()->text() ;
         actionsList.first()->setChecked(true);
     }
-    ui->labelConnectedPort->setText( "via "+portName );/* information text on round button */
+    /* information text on round button */
+    labelConnectedPort->setText( "via "+portName );
 }
 
 /*
@@ -701,7 +793,7 @@ void MainWindow::checkCustomPortName( QAction* action )
             act->setChecked(false);
     }
     portName = action->text();
-    ui->labelConnectedPort->setText( "via "+portName );
+    labelConnectedPort->setText( "via "+portName );
     settings->setValue( "settings/port",portName ) ;
     settings->sync();
 }
@@ -760,13 +852,13 @@ void MainWindow::initGUIConnections()
     connect( serial, SIGNAL( error( QSerialPort::SerialPortError ) ), this, SLOT( handleError( QSerialPort::SerialPortError ) ) );
     connect( portsMenu, SIGNAL( triggered( QAction* ) ),this, SLOT( checkCustomPortName( QAction* ) ) );
     connect( ratesMenu, SIGNAL( triggered( QAction* ) ),this,SLOT( setCustomBaudRate( QAction* ) ) );
-    connect( ui->connectBtn, SIGNAL( clicked() ), this, SLOT( handleSerialPort() ) );
+    connect( connectBtn, SIGNAL( clicked() ), this, SLOT( handleSerialPort() ) );
 
     connect( connectAction,SIGNAL( triggered() ),this, SLOT( handleSerialPort() ) );
     connect( ui->applyButton, SIGNAL( clicked() ), this,SLOT( createCommandLine() ) );
     connect( ui->radioButtonSetIPManually, SIGNAL( toggled( bool ) ),this, SLOT( IPSettingsHandler( bool ) ) );
     connect( this, SIGNAL( releaseLoop() ),&loop,SLOT( quit() ) );
-    connect( ui->tabWidget,SIGNAL( tabBarClicked( int ) ),this, SLOT( runConsole( int ) ) );
+    connect( ui->tabWidget,SIGNAL( tabBarClicked( int ) ),this, SLOT( tabOperating( int ) ) );
 
     /* Connection with plugged/unplugged devices */
     connect( this, &MainWindow::signal_DeviceConnected, this, &MainWindow::deviceConnected );
@@ -776,7 +868,52 @@ void MainWindow::initGUIConnections()
 /*
 * Run console view
 */
-void MainWindow::runConsole( int index )
+void MainWindow::on_consoleButton_clicked()
+{
+    if (!ui->consoleButton->text().compare("Console",Qt::CaseInsensitive))
+
+    {
+        setMinimumSize(0, 0);
+
+        ui->tabWidget->hide();
+        ui->mainGridLayout->removeWidget(ui->tabWidget);
+
+        consoleView->runConsole();
+        ui->mainGridLayout->addWidget(consoleView,1,0);
+
+        if (consoleView->isHidden())
+            consoleView->show();
+
+        connect( ui->autocompleter,SIGNAL( stateChanged(int) ),
+             consoleView->getConsoleController(), SLOT( setAutocomplete(int)) );
+
+        ui->autocompleter->show();
+        ui->applyButton->hide();
+        ui->rebootBtn->hide();
+        ui->consoleButton->setText("Back to Config");
+        this->setBaseSize(557,419);
+        this->setMaximumSize(1200,1000);
+    }
+    else
+    {
+        setMinimumSize(0, 0);
+        consoleView->hide();
+        ui->mainGridLayout->removeWidget(consoleView);
+
+        ui->mainGridLayout->addWidget(ui->tabWidget,1,0);
+        ui->tabWidget->show();
+        ui->autocompleter->hide();
+        ui->applyButton->show();
+        ui->rebootBtn->show();
+        ui->consoleButton->setText("Console");
+        this->setFixedSize(557,419);
+    }
+}
+
+/*
+*  Handling with tab widget pages
+*/
+void MainWindow::tabOperating( int index )
 {
 
     switch(index)
@@ -788,14 +925,6 @@ void MainWindow::runConsole( int index )
         case 1:
             switchFromConsole();
             dataHandler("ifconfig");
-            break;
-        case 2:
-            consoleTab->runConsole();
-            connect( ui->autocompleter,SIGNAL( stateChanged( int ) ),
-                     consoleTab->getConsoleController(), SLOT( setAutocomplete( int )) );
-            ui->autocompleter->show();
-            ui->applyButton->hide();
-            ui->rebootBtn->hide();
             break;
         default:
             break;
@@ -1115,11 +1244,12 @@ void MainWindow::closeSession()
     foreach( QComboBox* combo, lineCombosList )
          combo->clear();
 
-    ui->connectBtn->show();
-    ui->connectBtn->setText( "Connect" );
+    connectBtn->show();
+    labelConnectedPort->show();
+
     connectAction->setText( "Connect" );
     this->setFixedSize(*size );
-    ui->labelConnectedPort->show();
+    ui->consoleButton->hide();
     ui->labelConnected->hide();
     ui->labelStatus->hide();
     resetConfiguration->setEnabled(false);
@@ -1174,9 +1304,11 @@ QString MainWindow::getData()
 
     if ( serial->error() == QSerialPort::ReadError )
         showStatusMessage( QString( "Failed to read from port %1, error: %2" )
-                                 .arg( serial->portName() ).arg( serial->errorString() ),10000 );
+                                 .arg( serial->portName() )
+                           .arg( serial->errorString() ),10000 );
     else if ( serial->error() == QSerialPort::TimeoutError && readData.isEmpty() )
-        showStatusMessage( QString( "No data was currently available for reading from port %1" )
+        showStatusMessage( QString( "No data was currently available "
+                                    "for reading from port %1" )
                                  .arg( serial->portName() ),10000 );
 
     return QString( readData );
@@ -1213,7 +1345,7 @@ int MainWindow::dataHandler( const QString &command )
         }
         else
         {
-            ui->labelConnectedPort->setText( tr( "Device unavailable" ) );
+            labelConnectedPort->setText( tr( "Device unavailable" ) );
         }
 
         return 0;
@@ -1222,7 +1354,8 @@ int MainWindow::dataHandler( const QString &command )
     if( !buffer.contains( "OK" ) )
     {
         if ( buffer.contains( "Dip switch",Qt::CaseInsensitive ) )
-             QMessageBox::warning( 0,"Warning!","Dip switches state incorrect. \n Check it, please!" );
+             QMessageBox::warning( 0,"Warning!","Dip switches state incorrect. "
+                                                "\n Check it, please!" );
 
         QStringList errors = buffer.split( "\r\n" );
         showStatusMessage( errors.at(1),10000 );
@@ -1351,7 +1484,8 @@ void MainWindow::fillNetworkConfigForm( QList<QStringList> rows )
             }
 
             ipWidgetMap.value( QString( "%1" )
-                                   .arg( rowElements[0].trimmed() ))->setIP(rowElements[1]);
+                                   .arg( rowElements[0].trimmed() ))
+                                    ->setIP(rowElements[1]);
         }
     }
 }
@@ -1428,10 +1562,26 @@ bool MainWindow::rebootProcessing()
  */
 void MainWindow::openSession()
 {
-    ui->labelConnectedPort->hide();
-    ui->connectBtn->hide();
+    labelConnectedPort->hide();
+    connectBtn->hide();
+
     connectAction->setText( "Disconnect" );
     connectAction->setEnabled(true);
+/*
+    mainLayout = new QGridLayout;
+    mainLayout->addLayout(ui->headerLayout,0,0);
+    mainLayout->addWidget(ui->tabWidget,0,1);
+    mainLayout->addLayout(ui->footLayout,0,2);
+    mainLayout->setMargin(7);
+
+    QWidget *w = new QWidget();
+    w->setLayout(mainLayout);
+
+     setCentralWidget(w);
+
+*/
+
+    ui->consoleButton->show();
     ui->labelConnected->show();
     ui->labelStatus->show();
     ui->dipswitch->show();
@@ -1453,7 +1603,7 @@ void MainWindow::openSession()
     ui->rebootBtn->show();
     resetConfiguration->setEnabled(true);
 
-    this->setFixedSize( 543,424 );
+    this->setFixedSize(557,419);
 
 }
 
@@ -1464,7 +1614,8 @@ void MainWindow::handleError( QSerialPort::SerialPortError error )
 {
     if ( error == QSerialPort::ResourceError )
     {
-        QMessageBox::critical( this, tr( "Critical Error" ), serial->errorString() );
+        QMessageBox::critical( this, tr( "Critical Error" ),
+                               serial->errorString() );
         closeSerialPort();
     }
 }
@@ -1487,3 +1638,5 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+

@@ -22,7 +22,9 @@ SOURCES += main.cpp\
     consoletab.cpp \
     treemodelcompleter.cpp \
     ipwidget.cpp \
-    consolecontroller.cpp
+    consolecontroller.cpp \
+    consoleview.cpp \
+    clickablelabel.cpp
 
 HEADERS  += mainwindow.h \
     styleloader.h \
@@ -31,7 +33,9 @@ HEADERS  += mainwindow.h \
     treemodelcompleter.h \
     ipwidget.h \
     line.h \
-    consolecontroller.h
+    consolecontroller.h \
+    consoleview.h \
+    clickablelabel.h
 
 FORMS    += mainwindow.ui
 
