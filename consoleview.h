@@ -15,6 +15,7 @@ public:
     void setConsoleSignalConnections(bool f);
     ConsoleController* getConsoleController() const;
     void runConsole();
+    bool consoleIsRunning();
 signals:
 
 public slots:
@@ -23,6 +24,7 @@ private:
     QSerialPort* serial;
     ConsoleController* cController;
     int echo;
+    bool isRunning;
 };
 
 #endif // CONSOLEVIEW_H

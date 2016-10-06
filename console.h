@@ -42,6 +42,7 @@
 
 QT_BEGIN_NAMESPACE
 class TreeModelCompleter;
+class QFontDatabase;
 QT_END_NAMESPACE
 
 class Console : public QPlainTextEdit

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>557</width>
-    <height>419</height>
+    <width>558</width>
+    <height>416</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -42,6 +42,9 @@
     </property>
     <item row="0" column="0">
      <layout class="QHBoxLayout" name="headerLayout">
+      <property name="spacing">
+       <number>13</number>
+      </property>
       <item>
        <widget class="QLabel" name="deviceName">
         <property name="font">
@@ -81,46 +84,40 @@
        </widget>
       </item>
       <item>
-       <spacer name="horizontalSpacer_8">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+       <layout class="QHBoxLayout" name="statusLayout">
+        <property name="spacing">
+         <number>4</number>
         </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QLabel" name="labelStatus">
-        <property name="font">
-         <font>
-          <pointsize>9</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Status:</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="labelConnected">
-        <property name="font">
-         <font>
-          <pointsize>9</pointsize>
-          <weight>50</weight>
-          <bold>false</bold>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">color: rgb(81, 147, 49);</string>
-        </property>
-        <property name="text">
-         <string>Connected</string>
-        </property>
-       </widget>
+        <item>
+         <widget class="QLabel" name="labelStatus">
+          <property name="font">
+           <font>
+            <pointsize>9</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Status:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="labelConnected">
+          <property name="font">
+           <font>
+            <pointsize>9</pointsize>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: rgb(81, 147, 49);</string>
+          </property>
+          <property name="text">
+           <string>Connected</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item>
        <spacer name="horizontalSpacer_2">
@@ -137,6 +134,12 @@
       </item>
       <item>
        <widget class="QPushButton" name="consoleButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="font">
          <font>
           <pointsize>9</pointsize>
@@ -3335,6 +3338,9 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
     </item>
     <item row="2" column="0">
      <layout class="QHBoxLayout" name="footLayout">
+      <property name="leftMargin">
+       <number>7</number>
+      </property>
       <item>
        <widget class="QCheckBox" name="autocompleter">
         <property name="font">
@@ -3397,7 +3403,7 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>557</width>
+     <width>558</width>
      <height>26</height>
     </rect>
    </property>

@@ -9,14 +9,14 @@
 #include "ui_mainwindow.h"
 #include "bitset"
 #include "iostream"
-#include "consoleTab.h"
 #include "consolecontroller.h"
 #include "consoleview.h"
 #define CA_TOOLS
  #include "line.h"
 
 #define NAMEAPP "Quick Installation Tool"
-#define VERSION "v0.0.1b"
+#define VERSION " v0.0.1b"
+#define N_INFO_TABS 2
 
 DEFINE_GUID( GUID_DEVINTERFACE_USBDEVICE,0x4D36E978L, 0xE325,
              0x11CE,0xBF,0xC1,0x08,0x00,0x2B,0xE1,0x03,0x18 );
@@ -34,10 +34,11 @@ MainWindow::MainWindow( QWidget *parent ):QMainWindow( parent ),
                           Qt::MSWindowsFixedSizeDialogHint |
                           Qt::MaximizeUsingFullscreenGeometryHint );
     ui->setupUi(this);
-
+setTitle();
     /* List of device names in used */
-    devTypeStrings<<"CoolMasterNet"<<"CoolLinkNet"<<"CoolLinkHub"<<"CoolPlug";
-
+    devTypeStrings<<"CoolMasterNet"<<"CoolLinkNet"<<"CoolLinkHub"<<"CoolPlug"
+                 <<"CoolPlugSuperviser";
+    devType = -1;
     defineStyles();
     centralWindow = ui->centralWidget;
     setConnectButton();
@@ -92,8 +93,6 @@ void MainWindow::setTitle()
 
 void MainWindow::setConnectButton()
 {
-
-
     connectBtn = new QPushButton(centralWindow);
     connectBtn->setGeometry(130,64,145,145);
     connectBtn->setText("Connect");
@@ -107,7 +106,6 @@ void MainWindow::setConnectButton()
     labelConnectedPort->setText("Sometext");
     labelConnectedPort->setAlignment(Qt::AlignCenter);
     labelConnectedPort->setStyleSheet(connectedLabel);
-
 }
 
 
@@ -723,8 +721,8 @@ void MainWindow::setPortsMenu()
         labelConnectedPort->setText( "no any serial ports" );
         return;
     }
-
-    qSort( portsList.begin(),portsList.end(),comparator );/* Sort serial ports by name */
+    /* Sort serial ports by name */
+    qSort( portsList.begin(),portsList.end(),comparator );
     portsMenu->clear();
 
     /* enum serial port actions in "Serial Port" menu */
@@ -815,10 +813,12 @@ void MainWindow::setupModel()
     widget = new IPWidget(ui->IP_0,ui->IP_1,ui->IP_2,ui->IP_3);
     widget ->setAccessibleName("IP");
     ipWidgetMap.insert("IP",widget);
-    widget = new IPWidget(ui->netmask_0,ui->netmask_1,ui->netmask_2,ui->netmask_3);
+    widget = new IPWidget(ui->netmask_0,ui->netmask_1,
+                          ui->netmask_2,ui->netmask_3);
     widget ->setAccessibleName("Netmask");
     ipWidgetMap.insert("Netmask",widget);
-    widget = new IPWidget(ui->gateway_0,ui->gateway_1,ui->gateway_2,ui->gateway_3);
+    widget = new IPWidget(ui->gateway_0,ui->gateway_1,
+                          ui->gateway_2,ui->gateway_3);
     widget->setAccessibleName("Gateway");
     ipWidgetMap.insert("Gateway",widget);
 
@@ -826,7 +826,8 @@ void MainWindow::setupModel()
     while (it.hasNext())
     {
         it.next();
-        connect(it.value(),SIGNAL(sendIP(QString)),this,SLOT(handleNetconfigPage(QString))) ;
+        connect(it.value(),SIGNAL(sendIP(QString)),
+                this,SLOT(handleNetconfigPage(QString))) ;
     }
 }
 
@@ -846,23 +847,36 @@ void MainWindow::handleNetconfigPage( QString str )
 */
 void MainWindow::initGUIConnections()
 {
-    connect( resetConfiguration, SIGNAL( triggered() ), this, SLOT( getInitInformation() ) );
-    //connect( model,SIGNAL( itemChanged( QStandardItem* ) ),this,SLOT( handleNetconfigPage( QStandardItem* ) ) );
-    connect( ui->autoipCheckBox,SIGNAL( stateChanged( int ) ),this, SLOT( autoipCheckBoxState( int ) ) );
-    connect( serial, SIGNAL( error( QSerialPort::SerialPortError ) ), this, SLOT( handleError( QSerialPort::SerialPortError ) ) );
-    connect( portsMenu, SIGNAL( triggered( QAction* ) ),this, SLOT( checkCustomPortName( QAction* ) ) );
-    connect( ratesMenu, SIGNAL( triggered( QAction* ) ),this,SLOT( setCustomBaudRate( QAction* ) ) );
-    connect( connectBtn, SIGNAL( clicked() ), this, SLOT( handleSerialPort() ) );
+    connect( resetConfiguration, SIGNAL( triggered() ),
+             this, SLOT( getInitInformation() ) );
+    //connect( model,SIGNAL( itemChanged( QStandardItem* ) ),
+    //this,SLOT( handleNetconfigPage( QStandardItem* ) ) );
+    connect( ui->autoipCheckBox,SIGNAL( stateChanged( int ) ),
+             this, SLOT( autoipCheckBoxState( int ) ) );
+    connect( serial, SIGNAL( error( QSerialPort::SerialPortError ) ),
+             this, SLOT( handleError( QSerialPort::SerialPortError ) ) );
+    connect( portsMenu, SIGNAL( triggered( QAction* ) ),
+             this, SLOT( checkCustomPortName( QAction* ) ) );
+    connect( ratesMenu, SIGNAL( triggered( QAction* ) ),
+             this,SLOT( setCustomBaudRate( QAction* ) ) );
+    connect( connectBtn, SIGNAL( clicked() ),
+             this, SLOT( handleSerialPort() ) );
 
-    connect( connectAction,SIGNAL( triggered() ),this, SLOT( handleSerialPort() ) );
-    connect( ui->applyButton, SIGNAL( clicked() ), this,SLOT( createCommandLine() ) );
-    connect( ui->radioButtonSetIPManually, SIGNAL( toggled( bool ) ),this, SLOT( IPSettingsHandler( bool ) ) );
+    connect( connectAction,SIGNAL( triggered() ),
+             this, SLOT( handleSerialPort() ) );
+    connect( ui->applyButton, SIGNAL( clicked() ),
+             this,SLOT( createCommandLine() ) );
+    connect( ui->radioButtonSetIPManually, SIGNAL( toggled( bool ) ),
+             this, SLOT( IPSettingsHandler( bool ) ) );
     connect( this, SIGNAL( releaseLoop() ),&loop,SLOT( quit() ) );
-    connect( ui->tabWidget,SIGNAL( tabBarClicked( int ) ),this, SLOT( tabOperating( int ) ) );
+    connect( ui->tabWidget,SIGNAL( tabBarClicked( int ) ),
+             this, SLOT( tabOperating( int ) ) );
 
     /* Connection with plugged/unplugged devices */
-    connect( this, &MainWindow::signal_DeviceConnected, this, &MainWindow::deviceConnected );
-    connect( this, &MainWindow::signal_DeviceDisconnected,this, &MainWindow::deviceDisconnected );
+    connect( this, &MainWindow::signal_DeviceConnected,
+             this, &MainWindow::deviceConnected );
+    connect( this, &MainWindow::signal_DeviceDisconnected,
+             this, &MainWindow::deviceDisconnected );
 }
 
 /*
@@ -870,35 +884,46 @@ void MainWindow::initGUIConnections()
 */
 void MainWindow::on_consoleButton_clicked()
 {
-    if (!ui->consoleButton->text().compare("Console",Qt::CaseInsensitive))
+    if ( !ui->consoleButton->text().compare("Console",Qt::CaseInsensitive) )
 
     {
         setMinimumSize(0, 0);
 
         ui->tabWidget->hide();
-        ui->mainGridLayout->removeWidget(ui->tabWidget);
+        ui->mainGridLayout->removeWidget( ui->tabWidget );
 
-        consoleView->runConsole();
-        ui->mainGridLayout->addWidget(consoleView,1,0);
+        if ( !consoleView->consoleIsRunning() )
+                consoleView->runConsole();
 
-        if (consoleView->isHidden())
+        ui->mainGridLayout->addWidget( consoleView,1,0 );
+
+        if ( consoleView->isHidden() )
+        {
             consoleView->show();
-
+            consoleView->setConsoleSignalConnections(true);
+        }
         connect( ui->autocompleter,SIGNAL( stateChanged(int) ),
              consoleView->getConsoleController(), SLOT( setAutocomplete(int)) );
 
         ui->autocompleter->show();
         ui->applyButton->hide();
         ui->rebootBtn->hide();
-        ui->consoleButton->setText("Back to Config");
+
+        if(devType==COOLPLUG)
+            ui->consoleButton->hide();
+        else ui->consoleButton->setText("Back to Config");
         this->setBaseSize(557,419);
-        this->setMaximumSize(1200,1000);
+        this->setMinimumSize(557,419);
+
+        QRect rect = QApplication::desktop()->screenGeometry();
+        this->setMaximumSize(rect.width(),rect.height());
     }
     else
     {
         setMinimumSize(0, 0);
         consoleView->hide();
         ui->mainGridLayout->removeWidget(consoleView);
+        consoleView->setConsoleSignalConnections(false);
 
         ui->mainGridLayout->addWidget(ui->tabWidget,1,0);
         ui->tabWidget->show();
@@ -919,11 +944,9 @@ void MainWindow::tabOperating( int index )
     switch(index)
     {
         case 0:
-            switchFromConsole();
             dataHandler("line");
             break;
         case 1:
-            switchFromConsole();
             dataHandler("ifconfig");
             break;
         default:
@@ -931,12 +954,7 @@ void MainWindow::tabOperating( int index )
     }
 }
 
-void MainWindow::switchFromConsole()
-{
-    ui->autocompleter->hide();
-    ui->applyButton->show();
-    ui->rebootBtn->show();
-}
+
 
 /*
 *  slot for plugged device
@@ -992,7 +1010,8 @@ int MainWindow::execWarningWindow( QString warning )
     msgBox.setIcon( QMessageBox::NoIcon );
     msgBox.setInformativeText( warning );
 
-    QPushButton* reconnect = msgBox.addButton( "Reconnect", QMessageBox::AcceptRole );
+    QPushButton* reconnect = msgBox.addButton( "Reconnect",
+                                               QMessageBox::AcceptRole );
     msgBox.addButton( "Close Session", QMessageBox::DestructiveRole );
 
     msgBox.setDefaultButton( reconnect );
@@ -1012,8 +1031,8 @@ bool MainWindow::initializeDeviceNotification( void )
     devInt.dbcc_size        = sizeof( DEV_BROADCAST_DEVICEINTERFACE );
     devInt.dbcc_devicetype  = DBT_DEVTYP_DEVICEINTERFACE;
     devInt.dbcc_classguid   = GUID_DEVINTERFACE_USBDEVICE;
-    m_hDeviceNotify =
-            RegisterDeviceNotification( (HANDLE)winId(),&devInt, DEVICE_NOTIFY_WINDOW_HANDLE );
+    m_hDeviceNotify = RegisterDeviceNotification( (HANDLE)winId(),&devInt,
+                                                  DEVICE_NOTIFY_WINDOW_HANDLE );
     if( m_hDeviceNotify == 0 )
     {
         qDebug() << "Error: Failed to register device notification!";
@@ -1136,7 +1155,8 @@ void MainWindow::createCommandLine()
 
             if( header.contains( "line type" ) )
                 commandLine = header+val;
-            else commandLine = QString( "%1 %2 %3" ).arg( "ifconfig" ).arg( header ).arg( val );
+            else commandLine = QString( "%1 %2 %3" ).arg( "ifconfig" ).
+                                                    arg( header ).arg( val );
             qDebug()<<"command to device: "<<commandLine;
 
             dataHandler( commandLine ) ;
@@ -1179,7 +1199,8 @@ void MainWindow::openSerialPort()
             return;
         if( !checkDeviceInitialState() )
         {
-            switch ( execWarningWindow( "Device unavailable. \n Check device state" ) )
+            switch ( execWarningWindow( "Device unavailable. \n "
+                                        "Check device state" ) )
             {
                 case QMessageBox::Ok:
                     break;
@@ -1191,7 +1212,8 @@ void MainWindow::openSerialPort()
 
         while ( !getInitInformation() )
         {
-            switch ( execWarningWindow( "Device unavailable. \n Check device state" ) )
+            switch ( execWarningWindow( "Device unavailable. \n "
+                                        "Check device state" ) )
             {
                 case QMessageBox::Ok:
                     break;
@@ -1217,12 +1239,12 @@ void MainWindow::openSerialPort()
 bool MainWindow::checkDeviceInitialState()
 {
     QString buffer;
-    for( int i=0; i<3; i++ )
+    for( int i=0; i<10; i++ )
     {
         sendData( "\n" );
         buffer = getData();
 
-        if( !buffer.compare( "\r\n>" ) )
+        if( !buffer.compare( "\n>" ) )
             return true;
     }
     return false;
@@ -1299,14 +1321,14 @@ void MainWindow::sendData( const QString &command )
 QString MainWindow::getData()
 {
     QString readData = serial->readAll();
-    while( serial->waitForReadyRead( 100 ) )
+    while( serial->waitForReadyRead(100) )
        readData.append( serial->readAll() );
 
     if ( serial->error() == QSerialPort::ReadError )
         showStatusMessage( QString( "Failed to read from port %1, error: %2" )
                                  .arg( serial->portName() )
                            .arg( serial->errorString() ),10000 );
-    else if ( serial->error() == QSerialPort::TimeoutError && readData.isEmpty() )
+    else if ( serial->error()==QSerialPort::TimeoutError && readData.isEmpty() )
         showStatusMessage( QString( "No data was currently available "
                                     "for reading from port %1" )
                                  .arg( serial->portName() ),10000 );
@@ -1323,7 +1345,7 @@ int MainWindow::dataHandler( const QString &command )
     QString buffer;
     QList<QStringList> rows ;
 
-    sendData( command+"\n" );
+    sendData( command+"\r\n" );
     buffer = getData();
     qDebug()<<buffer;
 
@@ -1366,7 +1388,7 @@ int MainWindow::dataHandler( const QString &command )
         QStringList list = buffer.split( "\r\n",QString::SkipEmptyParts );
 
         if ( list[0].contains( command ) )
-            list.removeFirst();
+             list.removeFirst();
 
         if ( list[0].contains( "OK" ) )
         {
@@ -1376,9 +1398,15 @@ int MainWindow::dataHandler( const QString &command )
             showStatusMessage( list[0],10000 );
             return 1;
         }
+        i = list.size()-1;
 
-        list.removeLast();
-        list.removeLast();
+        while (i>0)
+        {
+           if(list[i].contains(">")||list[i].contains("OK"))
+               list.removeAt(i);
+           else break;
+           i--;
+        }
 
         for ( i=0; i<list.size(); i++ )
             rows.append( list[i].split( ": ", QString::SkipEmptyParts ) );
@@ -1389,7 +1417,6 @@ int MainWindow::dataHandler( const QString &command )
             fillSettings( rows );
         else if ( command.contains( "line" ) )
             fillLinesForm( rows );
-
     }
     return 1;
 }
@@ -1422,8 +1449,10 @@ void MainWindow::fillLinesForm( QList<QStringList> rows )
         nLine = strKey.data()[1].digitValue(); /*set line number*/
 
         lineProperty = rows[i].at(1).split( " " );
-        lineCombosList.at( nLine-1 )->setCurrentIndex( lineCombosList.at( nLine-1 )->findData( lineProperty.at(0),Qt::DisplayRole ) );
-        lineLabelList.at( nLine-1 )->setText( QString( "Line %1" ).arg( nLine ) );
+        lineCombosList.at( nLine-1 )->
+                                setCurrentIndex( lineCombosList.at( nLine-1 )->
+                              findData( lineProperty.at(0),Qt::DisplayRole ) );
+        lineLabelList.at( nLine-1 )->setText( QString( "Line %1" ).arg(nLine) );
     }
     ui->numberOfLines->setText( QString( "HVAC lines: %1" ).arg( numbHVAC ) );
 
@@ -1445,6 +1474,7 @@ void MainWindow::getDeviceInfo( QString version )
         devType = COOLPLUG;
     else if ( version.contains( QRegExp( "^02C0" ) ) )
         devType = COOLINK;
+
     ui->deviceName->setText( devTypeStrings[devType] );
     ui->deviceVersion->setText( "S/N "+version );
 }
@@ -1496,10 +1526,14 @@ void MainWindow::fillNetworkConfigForm( QList<QStringList> rows )
 bool MainWindow::getInitInformation()
 {
     QStringList list;
-    list << "set"<<"ifconfig"<<"line";
+    list << "set"<<"line"<<"ifconfig";
 
     for( int i =0 ; i<list.size();i++ )
     {
+        /* Coolplug have onle console view for user without permition */
+        if( devType == COOLPLUG && i == N_INFO_TABS )
+            break;
+
         dataHandler( list.at(i) );
         if ( i==0 )
             setLinesInitialState();
@@ -1525,7 +1559,7 @@ void MainWindow::on_rebootBtn_clicked()
     }
 
     timer.start() ;
-    while( timer.elapsed() < 2000 )
+    while( timer.elapsed() < 5000 )
              qApp->processEvents(0);
 
     dataHandler( "ifconfig" );
@@ -1562,49 +1596,46 @@ bool MainWindow::rebootProcessing()
  */
 void MainWindow::openSession()
 {
+    manageGlobalElements();
+
+    switch(devType)
+    {
+    case COOLINKHUB:
+    case COOLMASTER:
+    case COOLINK:
+        ui->networkConfigBtn->setEnabled(true);
+        ui->autoipCheckBox->show();
+        ui->tabWidget->setCurrentWidget( ui->netSet );
+        ui->applyButton->show();
+        ui->applyButton->setEnabled(false);
+        ui->rebootBtn->show();
+    case COOLPLUGADMIN:
+        ui->tabWidget->show();
+        ui->dipswitch->show();
+        ui->numberOfLines->show();
+        ui->hvacLine->setEnabled(true);
+        break;
+    case COOLPLUG:
+        on_consoleButton_clicked();
+        return;
+    }
+    this->setFixedSize(557,419);
+}
+
+void MainWindow::manageGlobalElements()
+{
     labelConnectedPort->hide();
     connectBtn->hide();
-
     connectAction->setText( "Disconnect" );
     connectAction->setEnabled(true);
-/*
-    mainLayout = new QGridLayout;
-    mainLayout->addLayout(ui->headerLayout,0,0);
-    mainLayout->addWidget(ui->tabWidget,0,1);
-    mainLayout->addLayout(ui->footLayout,0,2);
-    mainLayout->setMargin(7);
-
-    QWidget *w = new QWidget();
-    w->setLayout(mainLayout);
-
-     setCentralWidget(w);
-
-*/
-
     ui->consoleButton->show();
     ui->labelConnected->show();
     ui->labelStatus->show();
-    ui->dipswitch->show();
-    ui->numberOfLines->show();
     ui->labelConnected->setText( "Connected" );
     ui->labelConnected->setStyleSheet( "color: rgb( 81, 147, 49 )" );
     ui->deviceName->show();
     ui->deviceVersion->show();
-
-    ui->networkConfigBtn->setEnabled(true);
-    ui->hvacLine->setEnabled(true);
-    ui->autoipCheckBox->show();
-
-    ui->tabWidget->show();
-    ui->tabWidget->setCurrentWidget( ui->netSet );
-
-    ui->applyButton->show();
-    ui->applyButton->setEnabled(false);
-    ui->rebootBtn->show();
     resetConfiguration->setEnabled(true);
-
-    this->setFixedSize(557,419);
-
 }
 
 /*

@@ -4,12 +4,16 @@
 #include <QAbstractItemView>
 #include <QtCore/QDebug>
 #include "treemodelcompleter.h"
+#include <QFontDatabase>
 
 Console::Console( QWidget *parent )
     : QPlainTextEdit( parent),
     localEchoEnabled(false),comp(0)
 {
     document()->setMaximumBlockCount(100);
+    QFont font("Lucida Console");
+    font.setPointSize(10);
+    document()->setDefaultFont(font);
     QPalette p = palette();
     p.setColor( QPalette::Base, Qt::black );
     p.setColor( QPalette::Text, Qt::green );
@@ -18,8 +22,6 @@ Console::Console( QWidget *parent )
     insertPrompt(false);
     history = new QStringList;
     historyPos = 0;
-
-
 }
 
 void Console::insertPrompt( bool insertNewBlock )
@@ -42,40 +44,18 @@ void Console::scrollDown()
 
 void Console::putData( const QByteArray &d )
 {
-
     QString str (d);
 
     if ( localEchoEnabled && str.contains(cmd))
     {
         int index = str.indexOf("\r\n");
-
+        str.remove( 0,index+2 );
         str.remove( 0,index+2 );
     }
 
     insertPlainText( str );
-
     QScrollBar *bar = verticalScrollBar();
     bar->setValue( bar->maximum() );
-
-
-    /*data.append(d);
-
-    if ( data.contains(0x0A) )
-    {
-        QString str (data);
-
-        if ( localEchoEnabled && str.contains(cmd))
-        {
-            int index = str.indexOf("\r\n");
-
-            str.remove( 0,index+2 );
-        }
-        qDebug()<<str;
-        insertPlainText( str );
-
-        QScrollBar *bar = verticalScrollBar();
-        bar->setValue( bar->maximum() );
-    }*/
 }
 
 void Console::setLocalEchoEnabled( bool set )
@@ -94,7 +74,8 @@ void Console::setCompleter( TreeModelCompleter *completer )
 
     if( comp->widget()==0 )
         comp->setWidget(this);
-    QObject::connect( comp, SIGNAL(activated(QString)),this, SLOT(insertCompletion(QString)) );
+    QObject::connect( comp, SIGNAL(activated(QString)),
+                      this, SLOT(insertCompletion(QString)) );
 }
 
 TreeModelCompleter *Console::completer() const
@@ -160,14 +141,12 @@ void Console::keyPressEvent( QKeyEvent *e )
         case Qt::Key_Tab:
         case Qt::Key_Backtab:
              e->ignore();
-             return; // let the completer do default behavior
+             return; /* let the completer do default behavior */
         default:
             break;
         }
     }
-
-        // The following keys are forwarded by the completer to the widget
-
+    /* The following keys are forwarded by the completer to the widget */
     switch( e->key() )
     {
         case Qt::Key_Escape:
@@ -208,7 +187,7 @@ void Console::onEnter()
 
     cmd = textUnderCursor();
     historyAdd(cmd);
-    cmd.append("\n");
+    cmd.append("\r\n");
     emit getData(cmd.toLocal8Bit());
     insertPrompt();
 }

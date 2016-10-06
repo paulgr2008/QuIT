@@ -7,7 +7,6 @@
 #include <QtWidgets>
 #include <QSemaphore>
 #include "ipwidget.h"
-//#include <consoletab.h>
 
 #define N_LINES    8
 
@@ -21,13 +20,12 @@
 /* CA types */
 
 const int nHVACLines[]={8,5,5,3};
-enum DevType {COOLMASTER, COOLINK,COOLINKHUB,COOLPLUG} ;
+enum DevType {COOLMASTER, COOLINK,COOLINKHUB,COOLPLUG,COOLPLUGADMIN} ;
 
 
 QT_BEGIN_NAMESPACE
 
 class QLabel;
-class ConsoleTab;
 class ConsoleController;
 class ConsoleView;
 class IPWidget;
@@ -106,6 +104,7 @@ private:
     void setLinesViewStyle();
     void defineStyles();
     void openSession();
+    void manageGlobalElements();
     void comboBoxFilter();
     void sortItems();
     void createDipSwitches();
@@ -117,7 +116,7 @@ private:
     bool checkDeviceInitialState();
     void switchesHandler(const QString row, int code);
     bool rebootProcessing();
-    void switchFromConsole();
+
     bool nativeEvent(const QByteArray& eventType, void* message, long* result);
 
     Ui::MainWindow *ui;
@@ -183,7 +182,7 @@ private:
     int numbHVAC;
     int timeoutRead;
     int echo;
-    ConsoleTab* consoleTab;
+
     ConsoleView* consoleView;
     ConsoleController* consoleController;
     QPushButton *connectBtn;
