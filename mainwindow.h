@@ -116,6 +116,7 @@ private:
     bool checkDeviceInitialState();
     void switchesHandler(const QString row, int code);
     bool rebootProcessing();
+    void handlingLostConnection(QString w);
 
     bool nativeEvent(const QByteArray& eventType, void* message, long* result);
 

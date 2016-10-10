@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>558</width>
-    <height>416</height>
+    <width>597</width>
+    <height>451</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -45,6 +45,12 @@
       <property name="spacing">
        <number>13</number>
       </property>
+      <property name="leftMargin">
+       <number>8</number>
+      </property>
+      <property name="rightMargin">
+       <number>8</number>
+      </property>
       <item>
        <widget class="QLabel" name="deviceName">
         <property name="font">
@@ -66,22 +72,46 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="deviceVersion">
-        <property name="font">
-         <font>
-          <pointsize>9</pointsize>
-         </font>
-        </property>
-        <property name="autoFillBackground">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>S/N 000000</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QLabel" name="labelDeviceVersion">
+          <property name="font">
+           <font>
+            <pointsize>9</pointsize>
+           </font>
+          </property>
+          <property name="autoFillBackground">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>S/N </string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="deviceVersion">
+          <property name="font">
+           <font>
+            <pointsize>9</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="autoFillBackground">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>00000000</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item>
        <layout class="QHBoxLayout" name="statusLayout">
@@ -105,8 +135,8 @@
           <property name="font">
            <font>
             <pointsize>9</pointsize>
-            <weight>50</weight>
-            <bold>false</bold>
+            <weight>75</weight>
+            <bold>true</bold>
            </font>
           </property>
           <property name="styleSheet">
@@ -146,7 +176,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Console</string>
+         <string>Refresh</string>
         </property>
        </widget>
       </item>
@@ -169,7 +199,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <property name="elideMode">
        <enum>Qt::ElideNone</enum>
@@ -189,8 +219,8 @@
          <rect>
           <x>6</x>
           <y>8</y>
-          <width>517</width>
-          <height>242</height>
+          <width>559</width>
+          <height>275</height>
          </rect>
         </property>
         <property name="autoFillBackground">
@@ -207,9 +237,6 @@
            <width>259</width>
            <height>227</height>
           </rect>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">border-color: rgb(0, 0, 0);</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <property name="spacing">
@@ -508,19 +535,6 @@
            </widget>
           </item>
          </layout>
-        </widget>
-        <widget class="QLabel" name="dipswitch">
-         <property name="geometry">
-          <rect>
-           <x>316</x>
-           <y>24</y>
-           <width>90</width>
-           <height>21</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>DIP switches:</string>
-         </property>
         </widget>
         <widget class="QLabel" name="label_3">
          <property name="geometry">
@@ -1205,24 +1219,6 @@ border-color:  rgb(89, 157, 141);</string>
           </item>
          </layout>
         </widget>
-        <widget class="QLabel" name="numberOfLines">
-         <property name="geometry">
-          <rect>
-           <x>316</x>
-           <y>4</y>
-           <width>149</width>
-           <height>21</height>
-          </rect>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>9</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>Lines</string>
-         </property>
-        </widget>
         <widget class="QWidget" name="layoutWidget">
          <property name="geometry">
           <rect>
@@ -1466,6 +1462,44 @@ border-color:  rgb(89, 157, 141);</string>
           </item>
          </layout>
         </widget>
+        <widget class="QWidget" name="">
+         <property name="geometry">
+          <rect>
+           <x>28</x>
+           <y>244</y>
+           <width>255</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QLabel" name="labelHVACPort">
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>HVAC Port(s) Limit:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="numberOfLines">
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string> 1</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
        </widget>
       </widget>
       <widget class="QWidget" name="netSet">
@@ -1486,8 +1520,8 @@ border-color:  rgb(89, 157, 141);</string>
          <rect>
           <x>5</x>
           <y>7</y>
-          <width>519</width>
-          <height>243</height>
+          <width>559</width>
+          <height>277</height>
          </rect>
         </property>
         <property name="autoFillBackground">
@@ -2324,7 +2358,7 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
           <rect>
            <x>19</x>
            <y>54</y>
-           <width>179</width>
+           <width>218</width>
            <height>63</height>
           </rect>
          </property>
@@ -2355,7 +2389,7 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
              <bool>true</bool>
             </property>
             <property name="text">
-             <string>Set IP adress manually</string>
+             <string>Use the following IP address:</string>
             </property>
            </widget>
           </item>
@@ -3334,6 +3368,11 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
         <zorder>line</zorder>
        </widget>
       </widget>
+      <widget class="QWidget" name="consoleTab">
+       <attribute name="title">
+        <string>Console</string>
+       </attribute>
+      </widget>
      </widget>
     </item>
     <item row="2" column="0">
@@ -3350,6 +3389,18 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
         </property>
         <property name="text">
          <string>Autocompleter</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="cleanButton">
+        <property name="font">
+         <font>
+          <pointsize>9</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Clean</string>
         </property>
        </widget>
       </item>
@@ -3403,7 +3454,7 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>558</width>
+     <width>597</width>
      <height>26</height>
     </rect>
    </property>

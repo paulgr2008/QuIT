@@ -19,7 +19,7 @@ Console::Console( QWidget *parent )
     p.setColor( QPalette::Text, Qt::green );
     setPalette(p);
     prompt = ">";
-    insertPrompt(false);
+    insertPrompt(true);
     history = new QStringList;
     historyPos = 0;
 }
@@ -50,12 +50,11 @@ void Console::putData( const QByteArray &d )
     {
         int index = str.indexOf("\r\n");
         str.remove( 0,index+2 );
-        str.remove( 0,index+2 );
+      //  str.remove( 0,index+2 );
     }
-
+    qDebug()<<str;
     insertPlainText( str );
-    QScrollBar *bar = verticalScrollBar();
-    bar->setValue( bar->maximum() );
+    scrollDown();
 }
 
 void Console::setLocalEchoEnabled( bool set )
@@ -181,15 +180,17 @@ void Console::onEnter()
 {
    if( textCursor().positionInBlock() == prompt.length() )
    {
-        insertPrompt();
+       // insertPrompt();
         return;
    }
 
     cmd = textUnderCursor();
     historyAdd(cmd);
     cmd.append("\r\n");
-    emit getData(cmd.toLocal8Bit());
     insertPrompt();
+    emit getDataFromConsole(cmd.toLocal8Bit());
+
+
 }
 
 void Console::historyAdd( QString cmd )

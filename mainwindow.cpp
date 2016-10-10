@@ -74,6 +74,7 @@ setTitle();
     ui->rebootBtn->hide();
     ui->rebootBtn->setEnabled(false);
     ui->autocompleter->hide();
+    ui->cleanButton->hide();
     isSessionBegin = false;
     sysMsgTimeGate = false;
 
@@ -904,14 +905,16 @@ void MainWindow::on_consoleButton_clicked()
         }
         connect( ui->autocompleter,SIGNAL( stateChanged(int) ),
              consoleView->getConsoleController(), SLOT( setAutocomplete(int)) );
-
+        connect ( ui->cleanButton, SIGNAL(clicked()),
+             consoleView->getConsoleController(), SLOT( cleanConsole()) );
+        ui->cleanButton->show();
         ui->autocompleter->show();
         ui->applyButton->hide();
         ui->rebootBtn->hide();
 
         if(devType==COOLPLUG)
             ui->consoleButton->hide();
-        else ui->consoleButton->setText("Back to Config");
+        else ui->consoleButton->setText("Back To Config");
         this->setBaseSize(557,419);
         this->setMinimumSize(557,419);
 
@@ -928,6 +931,7 @@ void MainWindow::on_consoleButton_clicked()
         ui->mainGridLayout->addWidget(ui->tabWidget,1,0);
         ui->tabWidget->show();
         ui->autocompleter->hide();
+        ui->cleanButton->hide();
         ui->applyButton->show();
         ui->rebootBtn->show();
         ui->consoleButton->setText("Console");
@@ -953,8 +957,6 @@ void MainWindow::tabOperating( int index )
             break;
     }
 }
-
-
 
 /*
 *  slot for plugged device
@@ -1177,11 +1179,13 @@ void MainWindow::openSerialPort()
         {
         switch( execWarningWindow( "Port unavailable. \n Check port state" ) )
             {
-                case QMessageBox::Ok:
-                    break;
-                case QMessageBox::Cancel:
-                    closeSerialPort();
-                    return;
+            case QMessageBox::Ok:
+                     ui->labelConnected->setText( "Connected" );
+                     ui->labelConnected->setStyleSheet( "color: green" );
+                     break;
+            case QMessageBox::Cancel:
+                     closeSerialPort();
+                     return;
             }
         }
         else return;
@@ -1197,6 +1201,7 @@ void MainWindow::openSerialPort()
     {
         if ( isSessionBegin )
             return;
+
         if( !checkDeviceInitialState() )
         {
             switch ( execWarningWindow( "Device unavailable. \n "
@@ -1206,12 +1211,13 @@ void MainWindow::openSerialPort()
                     break;
                 case QMessageBox::Cancel:
                     closeSerialPort();
-                return;
+                    return;
             }
         }
 
         while ( !getInitInformation() )
         {
+
             switch ( execWarningWindow( "Device unavailable. \n "
                                         "Check device state" ) )
             {
@@ -1224,6 +1230,8 @@ void MainWindow::openSerialPort()
         }
         isSessionBegin = true;
         openSession();
+        ui->labelConnected->setText( "Connected" );
+        ui->labelConnected->setStyleSheet( "color: green" );
     }
     else
     {
@@ -1232,6 +1240,28 @@ void MainWindow::openSerialPort()
         closeSerialPort();
     }
 }
+/*
+void MainWindow::handlingLostConnection(QString w)
+{
+
+        switch ( execWarningWindow( "Device unavailable. \n "
+                                    "Check device state" ) )
+        {
+        case QMessageBox::Ok:
+
+            timer.start() ;
+            while( timer.elapsed() < 1000 )
+                     qApp->processEvents(0);
+
+            openSerialPort();
+            break;
+
+        case QMessageBox::Cancel:
+            closeSerialPort();
+            break;
+        }
+
+}*/
 
 /*
  * Check is device ready to answer
@@ -1244,7 +1274,7 @@ bool MainWindow::checkDeviceInitialState()
         sendData( "\n" );
         buffer = getData();
 
-        if( !buffer.compare( "\n>" ) )
+        if( buffer.contains( "\n>" ) )
             return true;
     }
     return false;
@@ -1385,7 +1415,13 @@ int MainWindow::dataHandler( const QString &command )
     }
     else
     {
+        ui->labelConnected->setText( "Connected" );
+        ui->labelConnected->setStyleSheet( "color: green" );
+
         QStringList list = buffer.split( "\r\n",QString::SkipEmptyParts );
+
+        if ( list[0].contains("build", Qt::CaseInsensitive) )
+             list.removeFirst();
 
         if ( list[0].contains( command ) )
              list.removeFirst();
@@ -1486,6 +1522,7 @@ void MainWindow::fillNetworkConfigForm( QList<QStringList> rows )
 {
     QStringList rowElements;
     bool flag;
+    QRegExp exp ("[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}");
 
     foreach ( rowElements,rows )
     {
@@ -1498,7 +1535,10 @@ void MainWindow::fillNetworkConfigForm( QList<QStringList> rows )
             flag = rowElements[1].contains( "Yes",Qt::CaseInsensitive )? true : false;
             ui->autoipCheckBox->setChecked( flag );
         }
-        else if ( rowElements[1].contains( "." ) )
+
+
+
+        else if ( rowElements[1].contains( exp ) )
         {
             if ( rowElements[0].contains( "IP", Qt::CaseInsensitive ) )
             {

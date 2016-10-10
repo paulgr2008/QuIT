@@ -30,6 +30,7 @@ class ConsoleController : public QObject
         void writeData(const QByteArray &data);
         void readData();
         void setAutocomplete(int);
+        void cleanConsole();
 
     private:
         QAbstractItemModel *modelFromXMLFile(const QString& fileName);

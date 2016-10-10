@@ -39,6 +39,7 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui
 
+RC_FILE += ico.rc
 RESOURCES += \
     res.qrc
 QMAKE_CXXFLAGS += -std=gnu++11

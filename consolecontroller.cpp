@@ -18,11 +18,10 @@ ConsoleController::ConsoleController(QSerialPort* s, int e, QObject *parent)
 
     console->setLocalEchoEnabled(e);
     console->setCompleter(completer);
-    setConsoleSignalConnections();
+   // setConsoleSignalConnections();
 }
 void ConsoleController::writeData( const QByteArray &data )
 {
-    qDebug()<<"data to device: "<<data;
     serial->write(data);
 }
 
@@ -37,20 +36,24 @@ void ConsoleController::readData()
     //{
         QByteArray data = serial->readAll();
         console->putData( data );
-        qDebug()<<data;
+   //     qDebug()<<data;
     //}
 }
 
 void ConsoleController::setConsoleSignalConnections()
 {
-    connect( serial, SIGNAL(readyRead()), this, SLOT(readData()) );
-    connect( console, SIGNAL(getData(QByteArray)), this, SLOT(writeData(QByteArray)) );
+    connect( serial, SIGNAL(readyRead()),
+             this, SLOT(readData()) );
+    connect( console, SIGNAL(getDataFromConsole(QByteArray)),
+             this, SLOT(writeData(QByteArray)) );
 }
 
 void ConsoleController::closeConsoleSignalConnection()
 {
-    disconnect( serial, SIGNAL(readyRead()), this, SLOT(readData()) );
-    disconnect( console, SIGNAL(getData(QByteArray)), this, SLOT(writeData(QByteArray)) );
+    disconnect( serial, SIGNAL(readyRead()),
+                this, SLOT(readData()) );
+    disconnect( console, SIGNAL(getDataFromConsole(QByteArray)),
+                this, SLOT(writeData(QByteArray)) );
 }
 
 QAbstractItemModel* ConsoleController::modelFromXMLFile(const QString& fileName)
@@ -102,11 +105,19 @@ QAbstractItemModel* ConsoleController::modelFromXMLFile(const QString& fileName)
         }
     return model;
 }
+
+void ConsoleController::cleanConsole()
+{
+    console->clear();
+}
+
 void ConsoleController::setAutocomplete( int state )
 {
     if( state == Qt::Checked)
-        connect( console,SIGNAL(cursorPositionChanged()),console,SLOT(completerHandler()) );
-    else disconnect( console,SIGNAL(cursorPositionChanged()),console,SLOT(completerHandler()) );
+        connect( console,SIGNAL(cursorPositionChanged()),
+                 console,SLOT(completerHandler()) );
+    else disconnect( console,SIGNAL(cursorPositionChanged()),
+                     console,SLOT(completerHandler()) );
 
 }
 
