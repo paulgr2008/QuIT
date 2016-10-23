@@ -27,8 +27,6 @@ IPWidget::IPWidget(QLineEdit* ledit,
         connect( ed,SIGNAL(textEdited(QString)),this,SLOT(popupWarning(QString)) );
         connect( ed,SIGNAL(returnPressed()),this,SLOT(finishEditIPAddress()) );
     }
-    //MainWindow mainWindow;
-    //connect(this, SIGNAL(sendIP(QString),mainWindow,SLOT() );
 }
 
 void IPWidget::setIP( QString str )

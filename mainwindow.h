@@ -19,7 +19,7 @@
 
 /* CA types */
 
-const int nHVACLines[]={8,5,5,3};
+const int nHVACLines[]={8,5,5,4};
 enum DevType {COOLMASTER, COOLINK,COOLINKHUB,COOLPLUG,COOLPLUGADMIN} ;
 
 
@@ -49,7 +49,6 @@ public:
 private slots:
     void tabOperating(int index);
     void checkCustomPortName(QAction* action);
-    void autoipCheckBoxState(int state);
     void handleSerialPort();
     void handleError(QSerialPort::SerialPortError error);
     void sendData(const QString &command) ;
@@ -67,8 +66,10 @@ private slots:
     void handleLines(QString str);
     bool getInitInformation();
     void on_rebootBtn_clicked();
+    void closeConsoleView();
+    void getPageInformation();
+    void runConsoleView();
 
-    void on_consoleButton_clicked();
 protected:
  bool eventFilter( QObject *target, QEvent *event );
 
@@ -99,9 +100,8 @@ private:
     void setPortsMenu();
     void closeSession();
     void timeGateHandler();
-    void setupLinesView();
+    void createLinesView();
     void setLinesInitialState();
-    void setLinesViewStyle();
     void defineStyles();
     void openSession();
     void manageGlobalElements();
@@ -117,6 +117,8 @@ private:
     void switchesHandler(const QString row, int code);
     bool rebootProcessing();
     void handlingLostConnection(QString w);
+
+
 
     bool nativeEvent(const QByteArray& eventType, void* message, long* result);
 
@@ -161,7 +163,6 @@ private:
     QMenu* portsMenu;
     QMenu* ratesMenu;
     QAction* connectAction;
-    QAction* resetConfiguration;
     QAction* getHVACInfo;
     QSize* size;
     QSettings* settings;
@@ -170,6 +171,8 @@ private:
     QList<QLabel*> lineLabelList;
     QList<QGroupBox*> lineFrameBoxesList;
     QList<QLabel*> switchesList;
+    QStringList selectedDevices;
+    QStringList pagesList;
     QPixmap devicePict;
     QMessageBox* msgBox;
     QEventLoop loop;
@@ -181,14 +184,20 @@ private:
     bool isSendingSuccess;
     int devType;
     int numbHVAC;
+    int usedLines;
+    int usedGree;
     int timeoutRead;
     int echo;
+
+
 
     ConsoleView* consoleView;
     ConsoleController* consoleController;
     QPushButton *connectBtn;
     QWidget* centralWindow;
     QLabel* labelConnectedPort;
+    QLabel* HVACPorts;
+    QLabel* numberOfHVACPort;
     //IPWidget* ipWidget;
 
     /* styles strings*/
@@ -202,6 +211,12 @@ private:
     QString connectButtonStyleHover;
     QString connectButtonStylePressed;
     QString connectedLabel;
+    QString connectButtonStyleError;
+    QString connectButtonStyleDisabled;
+
+    /* lines layouts */
+    QLayout* layoutMainHVAC;
+    QHBoxLayout* layoutMainPage;
 
 
 

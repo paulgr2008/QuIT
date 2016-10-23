@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>597</width>
-    <height>451</height>
+    <width>707</width>
+    <height>450</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -30,159 +30,187 @@
     <normaloff>:/images/icon1.png</normaloff>:/images/icon1.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QGridLayout" name="mainGridLayout">
+   <layout class="QVBoxLayout" name="verticalLayout">
     <property name="bottomMargin">
      <number>0</number>
     </property>
-    <property name="horizontalSpacing">
-     <number>0</number>
-    </property>
-    <property name="verticalSpacing">
-     <number>4</number>
-    </property>
-    <item row="0" column="0">
-     <layout class="QHBoxLayout" name="headerLayout">
-      <property name="spacing">
-       <number>13</number>
+    <item>
+     <widget class="QFrame" name="frameHeader">
+      <property name="styleSheet">
+       <string notr="true">border-color: rgb(181, 181, 181);</string>
       </property>
-      <property name="leftMargin">
-       <number>8</number>
+      <property name="frameShape">
+       <enum>QFrame::Box</enum>
       </property>
-      <property name="rightMargin">
-       <number>8</number>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
       </property>
-      <item>
-       <widget class="QLabel" name="deviceName">
-        <property name="font">
-         <font>
-          <pointsize>10</pointsize>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="autoFillBackground">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>CoolMasterNet</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <item>
-         <widget class="QLabel" name="labelDeviceVersion">
-          <property name="font">
-           <font>
-            <pointsize>9</pointsize>
-           </font>
-          </property>
-          <property name="autoFillBackground">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>S/N </string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="deviceVersion">
-          <property name="font">
-           <font>
-            <pointsize>9</pointsize>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="autoFillBackground">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>00000000</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="statusLayout">
-        <property name="spacing">
-         <number>4</number>
-        </property>
-        <item>
-         <widget class="QLabel" name="labelStatus">
-          <property name="font">
-           <font>
-            <pointsize>9</pointsize>
-           </font>
-          </property>
-          <property name="text">
-           <string>Status:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="labelConnected">
-          <property name="font">
-           <font>
-            <pointsize>9</pointsize>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">color: rgb(81, 147, 49);</string>
-          </property>
-          <property name="text">
-           <string>Connected</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QPushButton" name="consoleButton">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>9</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Refresh</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
+      <layout class="QHBoxLayout" name="mainGridLayout" stretch="0,0,0,0,0,0,0">
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="deviceName">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>CoolMasterNet</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QLabel" name="labelDeviceVersion">
+           <property name="font">
+            <font>
+             <pointsize>9</pointsize>
+            </font>
+           </property>
+           <property name="autoFillBackground">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>S/N: </string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="deviceVersion">
+           <property name="font">
+            <font>
+             <pointsize>9</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="autoFillBackground">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>00000000</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_5">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="statusLayout">
+         <property name="spacing">
+          <number>4</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="labelStatus">
+           <property name="font">
+            <font>
+             <pointsize>9</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Status:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="labelConnected">
+           <property name="font">
+            <font>
+             <pointsize>9</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: rgb(81, 147, 49);</string>
+           </property>
+           <property name="text">
+            <string>Connected</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>67</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="refreshButton">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>9</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Refresh</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </item>
-    <item row="1" column="0">
+    <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="enabled">
        <bool>true</bool>
@@ -199,7 +227,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <property name="elideMode">
        <enum>Qt::ElideNone</enum>
@@ -214,1293 +242,6 @@
        <attribute name="title">
         <string>HVAC Lines</string>
        </attribute>
-       <widget class="QGroupBox" name="groupBox">
-        <property name="geometry">
-         <rect>
-          <x>6</x>
-          <y>8</y>
-          <width>559</width>
-          <height>275</height>
-         </rect>
-        </property>
-        <property name="autoFillBackground">
-         <bool>true</bool>
-        </property>
-        <property name="title">
-         <string/>
-        </property>
-        <widget class="QGroupBox" name="group">
-         <property name="geometry">
-          <rect>
-           <x>26</x>
-           <y>9</y>
-           <width>259</width>
-           <height>227</height>
-          </rect>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_2">
-          <property name="spacing">
-           <number>2</number>
-          </property>
-          <property name="leftMargin">
-           <number>2</number>
-          </property>
-          <property name="topMargin">
-           <number>2</number>
-          </property>
-          <property name="rightMargin">
-           <number>2</number>
-          </property>
-          <property name="bottomMargin">
-           <number>2</number>
-          </property>
-          <item>
-           <widget class="QGroupBox" name="groupBox_1">
-            <layout class="QHBoxLayout" name="horizontalLayoutBox_2">
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>4</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QLabel" name="labelBox_1">
-               <property name="font">
-                <font>
-                 <pointsize>9</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>Line 1</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QComboBox" name="comboBox_1"/>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QGroupBox" name="groupBox_2">
-            <layout class="QHBoxLayout" name="horizontalLayoutBox_3">
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>4</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QLabel" name="labelBox_2">
-               <property name="font">
-                <font>
-                 <pointsize>9</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>Line 2 </string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QComboBox" name="comboBox_2"/>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QGroupBox" name="groupBox_3">
-            <layout class="QHBoxLayout" name="horizontalLayoutBox_4">
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>4</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QLabel" name="labelBox_3">
-               <property name="font">
-                <font>
-                 <pointsize>9</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>Line 3</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QComboBox" name="comboBox_3"/>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QGroupBox" name="groupBox_4">
-            <layout class="QHBoxLayout" name="horizontalLayoutBox_5">
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>4</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QLabel" name="labelBox_4">
-               <property name="font">
-                <font>
-                 <pointsize>9</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QComboBox" name="comboBox_4"/>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QGroupBox" name="groupBox_5">
-            <layout class="QHBoxLayout" name="horizontalLayoutBox_6">
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>4</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QLabel" name="labelBox_5">
-               <property name="font">
-                <font>
-                 <pointsize>9</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QComboBox" name="comboBox_5"/>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QGroupBox" name="groupBox_6">
-            <layout class="QHBoxLayout" name="horizontalLayoutBox_7">
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>4</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QLabel" name="labelBox_6">
-               <property name="font">
-                <font>
-                 <pointsize>9</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QComboBox" name="comboBox_6"/>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QGroupBox" name="groupBox_7">
-            <layout class="QHBoxLayout" name="horizontalLayoutBox_8">
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>4</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QLabel" name="labelBox_7">
-               <property name="font">
-                <font>
-                 <pointsize>9</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QComboBox" name="comboBox_7"/>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QGroupBox" name="groupBox_8">
-            <layout class="QHBoxLayout" name="horizontalLayoutBox_9">
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>4</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QLabel" name="labelBox_8">
-               <property name="font">
-                <font>
-                 <pointsize>9</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QComboBox" name="comboBox_8"/>
-             </item>
-            </layout>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-        <widget class="QLabel" name="label_3">
-         <property name="geometry">
-          <rect>
-           <x>315</x>
-           <y>46</y>
-           <width>154</width>
-           <height>189</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="pixmap">
-          <pixmap resource="res.qrc">:/images/switches.png</pixmap>
-         </property>
-         <property name="scaledContents">
-          <bool>true</bool>
-         </property>
-        </widget>
-        <widget class="QWidget" name="layoutWidget">
-         <property name="geometry">
-          <rect>
-           <x>333</x>
-           <y>102</y>
-           <width>75</width>
-           <height>18</height>
-          </rect>
-         </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_10">
-          <property name="spacing">
-           <number>2</number>
-          </property>
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_7">
-            <property name="spacing">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="sw_q1_1">
-              <property name="maximumSize">
-               <size>
-                <width>16</width>
-                <height>7</height>
-               </size>
-              </property>
-              <property name="accessibleName">
-               <string>sw_q1_on</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(89, 157, 141);</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="sw_q1_0">
-              <property name="maximumSize">
-               <size>
-                <width>16</width>
-                <height>7</height>
-               </size>
-              </property>
-              <property name="accessibleName">
-               <string>sw_q1_off</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(89, 157, 141);</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_8">
-            <property name="spacing">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="sw_q2_1">
-              <property name="maximumSize">
-               <size>
-                <width>16</width>
-                <height>7</height>
-               </size>
-              </property>
-              <property name="accessibleName">
-               <string>sw_q2_on</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(89, 157, 141);</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="sw_q2_0">
-              <property name="maximumSize">
-               <size>
-                <width>16</width>
-                <height>7</height>
-               </size>
-              </property>
-              <property name="accessibleName">
-               <string>sw_q2_off</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(89, 157, 141);</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_9">
-            <property name="spacing">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="sw_q3_1">
-              <property name="maximumSize">
-               <size>
-                <width>16</width>
-                <height>7</height>
-               </size>
-              </property>
-              <property name="accessibleName">
-               <string>sw_q3_on</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(89, 157, 141);</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="sw_q3_0">
-              <property name="maximumSize">
-               <size>
-                <width>16</width>
-                <height>7</height>
-               </size>
-              </property>
-              <property name="accessibleName">
-               <string>sw_q3_off</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(89, 157, 141);</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_10">
-            <property name="spacing">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="sw_q4_1">
-              <property name="maximumSize">
-               <size>
-                <width>16</width>
-                <height>7</height>
-               </size>
-              </property>
-              <property name="accessibleName">
-               <string>sw_q4_on</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(89, 157, 141);</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="sw_q4_0">
-              <property name="maximumSize">
-               <size>
-                <width>16</width>
-                <height>7</height>
-               </size>
-              </property>
-              <property name="accessibleName">
-               <string>sw_q4_off</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(89, 157, 141);</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </widget>
-        <widget class="QWidget" name="layoutWidget">
-         <property name="geometry">
-          <rect>
-           <x>333</x>
-           <y>165</y>
-           <width>75</width>
-           <height>18</height>
-          </rect>
-         </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_11">
-          <property name="spacing">
-           <number>2</number>
-          </property>
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_24">
-            <property name="spacing">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="sw_r1_1">
-              <property name="maximumSize">
-               <size>
-                <width>16</width>
-                <height>7</height>
-               </size>
-              </property>
-              <property name="accessibleName">
-               <string>sw_r1_on</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(89, 157, 141);</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="lineWidth">
-               <number>1</number>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="sw_r1_0">
-              <property name="maximumSize">
-               <size>
-                <width>16</width>
-                <height>7</height>
-               </size>
-              </property>
-              <property name="accessibleName">
-               <string>sw_r1_off</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(89, 157, 141);</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="lineWidth">
-               <number>1</number>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_22">
-            <property name="spacing">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="sw_r2_1">
-              <property name="maximumSize">
-               <size>
-                <width>16</width>
-                <height>7</height>
-               </size>
-              </property>
-              <property name="accessibleName">
-               <string>sw_r2_on</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(89, 157, 141);</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="sw_r2_0">
-              <property name="maximumSize">
-               <size>
-                <width>16</width>
-                <height>7</height>
-               </size>
-              </property>
-              <property name="accessibleName">
-               <string>sw_r2_off</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(89, 157, 141);</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="lineWidth">
-               <number>1</number>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_23">
-            <property name="spacing">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="sw_r3_1">
-              <property name="maximumSize">
-               <size>
-                <width>16</width>
-                <height>7</height>
-               </size>
-              </property>
-              <property name="accessibleName">
-               <string>sw_r3_on</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(89, 157, 141);</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="lineWidth">
-               <number>1</number>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="sw_r3_0">
-              <property name="maximumSize">
-               <size>
-                <width>16</width>
-                <height>7</height>
-               </size>
-              </property>
-              <property name="accessibleName">
-               <string>sw_r3_off</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(89, 157, 141);</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="lineWidth">
-               <number>1</number>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_25">
-            <property name="spacing">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="sw_r4_1">
-              <property name="maximumSize">
-               <size>
-                <width>16</width>
-                <height>7</height>
-               </size>
-              </property>
-              <property name="accessibleName">
-               <string>sw_r4_on</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(89, 157, 141);</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="lineWidth">
-               <number>1</number>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="sw_r4_0">
-              <property name="maximumSize">
-               <size>
-                <width>16</width>
-                <height>7</height>
-               </size>
-              </property>
-              <property name="accessibleName">
-               <string>sw_r4_off</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(89, 157, 141);</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="lineWidth">
-               <number>1</number>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </widget>
-        <widget class="QWidget" name="layoutWidget">
-         <property name="geometry">
-          <rect>
-           <x>333</x>
-           <y>64</y>
-           <width>75</width>
-           <height>18</height>
-          </rect>
-         </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_9">
-          <property name="spacing">
-           <number>2</number>
-          </property>
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_3">
-            <property name="spacing">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="sw_p1_1">
-              <property name="maximumSize">
-               <size>
-                <width>16</width>
-                <height>7</height>
-               </size>
-              </property>
-              <property name="accessibleName">
-               <string>sw_p1_on</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(89, 157, 141);
-border-color:  rgb(89, 157, 141);</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="sw_p1_0">
-              <property name="maximumSize">
-               <size>
-                <width>16</width>
-                <height>7</height>
-               </size>
-              </property>
-              <property name="accessibleName">
-               <string>sw_p1_off</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true"/>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_4">
-            <property name="spacing">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="sw_p2_1">
-              <property name="maximumSize">
-               <size>
-                <width>16</width>
-                <height>7</height>
-               </size>
-              </property>
-              <property name="accessibleName">
-               <string>sw_p2_on</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(89, 156, 140);</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="sw_p2_0">
-              <property name="maximumSize">
-               <size>
-                <width>16</width>
-                <height>7</height>
-               </size>
-              </property>
-              <property name="accessibleName">
-               <string>sw_p2_off</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_5">
-            <property name="spacing">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="sw_p3_1">
-              <property name="maximumSize">
-               <size>
-                <width>16</width>
-                <height>7</height>
-               </size>
-              </property>
-              <property name="accessibleName">
-               <string>sw_p3_on</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="sw_p3_0">
-              <property name="maximumSize">
-               <size>
-                <width>16</width>
-                <height>7</height>
-               </size>
-              </property>
-              <property name="accessibleName">
-               <string>sw_p3_off</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(89, 157, 141);</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_6">
-            <property name="spacing">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="sw_p4_1">
-              <property name="maximumSize">
-               <size>
-                <width>16</width>
-                <height>7</height>
-               </size>
-              </property>
-              <property name="accessibleName">
-               <string>sw_p4_on</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(89, 157, 141);</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="sw_p4_0">
-              <property name="maximumSize">
-               <size>
-                <width>15</width>
-                <height>7</height>
-               </size>
-              </property>
-              <property name="accessibleName">
-               <string>sw_p4_off</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </widget>
-        <widget class="QWidget" name="layoutWidget">
-         <property name="geometry">
-          <rect>
-           <x>332</x>
-           <y>200</y>
-           <width>75</width>
-           <height>18</height>
-          </rect>
-         </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_12">
-          <property name="spacing">
-           <number>2</number>
-          </property>
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_29">
-            <property name="spacing">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="sw_s1_1">
-              <property name="maximumSize">
-               <size>
-                <width>16</width>
-                <height>7</height>
-               </size>
-              </property>
-              <property name="accessibleName">
-               <string>sw_s1_on</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(89, 157, 141);</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="lineWidth">
-               <number>1</number>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="sw_s1_0">
-              <property name="maximumSize">
-               <size>
-                <width>16</width>
-                <height>7</height>
-               </size>
-              </property>
-              <property name="accessibleName">
-               <string>sw_s1_off</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(89, 157, 141);</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="lineWidth">
-               <number>1</number>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_28">
-            <property name="spacing">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="sw_s2_1">
-              <property name="maximumSize">
-               <size>
-                <width>16</width>
-                <height>7</height>
-               </size>
-              </property>
-              <property name="accessibleName">
-               <string>sw_s2_on</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(89, 157, 141);</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="lineWidth">
-               <number>1</number>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="sw_s2_0">
-              <property name="maximumSize">
-               <size>
-                <width>16</width>
-                <height>7</height>
-               </size>
-              </property>
-              <property name="accessibleName">
-               <string>sw_s2_off</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(89, 157, 141);</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="lineWidth">
-               <number>1</number>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_26">
-            <property name="spacing">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="sw_s3_1">
-              <property name="maximumSize">
-               <size>
-                <width>16</width>
-                <height>7</height>
-               </size>
-              </property>
-              <property name="accessibleName">
-               <string>sw_s3_on</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(89, 157, 141);</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="lineWidth">
-               <number>1</number>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="sw_s3_0">
-              <property name="maximumSize">
-               <size>
-                <width>16</width>
-                <height>7</height>
-               </size>
-              </property>
-              <property name="accessibleName">
-               <string>sw_s3_0</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(89, 157, 141);</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="lineWidth">
-               <number>1</number>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_27">
-            <property name="spacing">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="sw_s4_1">
-              <property name="maximumSize">
-               <size>
-                <width>16</width>
-                <height>7</height>
-               </size>
-              </property>
-              <property name="accessibleName">
-               <string>sw_s4_on</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(89, 157, 141);</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="lineWidth">
-               <number>1</number>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="sw_s4_0">
-              <property name="maximumSize">
-               <size>
-                <width>16</width>
-                <height>7</height>
-               </size>
-              </property>
-              <property name="accessibleName">
-               <string>sw_s4_off</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(89, 157, 141);</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="lineWidth">
-               <number>1</number>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </widget>
-        <widget class="QWidget" name="">
-         <property name="geometry">
-          <rect>
-           <x>28</x>
-           <y>244</y>
-           <width>255</width>
-           <height>20</height>
-          </rect>
-         </property>
-         <layout class="QHBoxLayout" name="horizontalLayout">
-          <item>
-           <widget class="QLabel" name="labelHVACPort">
-            <property name="font">
-             <font>
-              <pointsize>9</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>HVAC Port(s) Limit:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="numberOfLines">
-            <property name="font">
-             <font>
-              <pointsize>9</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string> 1</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </widget>
       </widget>
       <widget class="QWidget" name="netSet">
        <property name="enabled">
@@ -1632,58 +373,15 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
          <zorder>macLineEdit</zorder>
          <zorder>mACLabel</zorder>
         </widget>
-        <widget class="QWidget" name="layoutWidget">
-         <property name="geometry">
-          <rect>
-           <x>270</x>
-           <y>144</y>
-           <width>221</width>
-           <height>24</height>
-          </rect>
-         </property>
-         <layout class="QHBoxLayout" name="autoipLayout" stretch="0,0">
-          <item>
-           <widget class="QCheckBox" name="autoipCheckBox">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>9</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>AutoIP</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_9">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>48</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </widget>
         <widget class="QGroupBox" name="groupBoxDNS">
          <property name="enabled">
           <bool>true</bool>
          </property>
          <property name="geometry">
           <rect>
-           <x>270</x>
+           <x>268</x>
            <y>24</y>
-           <width>236</width>
+           <width>285</width>
            <height>106</height>
           </rect>
          </property>
@@ -1693,13 +391,13 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
           </font>
          </property>
          <property name="title">
-          <string>Set DNS adresses</string>
+          <string>Use the following DNS server addresses:</string>
          </property>
          <widget class="QWidget" name="layoutWidget">
           <property name="geometry">
            <rect>
-            <x>8</x>
-            <y>28</y>
+            <x>26</x>
+            <y>24</y>
             <width>224</width>
             <height>73</height>
            </rect>
@@ -2357,7 +1055,7 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
          <property name="geometry">
           <rect>
            <x>19</x>
-           <y>54</y>
+           <y>52</y>
            <width>218</width>
            <height>63</height>
           </rect>
@@ -3362,7 +2060,6 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
         </widget>
         <zorder>dhcpGroupBox</zorder>
         <zorder>layoutWidget</zorder>
-        <zorder>layoutWidget</zorder>
         <zorder>groupBoxDNS</zorder>
         <zorder>verticalLayoutWidget</zorder>
         <zorder>line</zorder>
@@ -3375,7 +2072,7 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
       </widget>
      </widget>
     </item>
-    <item row="2" column="0">
+    <item>
      <layout class="QHBoxLayout" name="footLayout">
       <property name="leftMargin">
        <number>7</number>
@@ -3454,7 +2151,7 @@ font: 9pt &quot;MS Shell Dlg 2&quot;;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>597</width>
+     <width>707</width>
      <height>26</height>
     </rect>
    </property>

@@ -49,6 +49,7 @@ QPushButton#connectBtn:pressed
     border-color: #0f0f0f;
 	
 }
+/*
 QGroupBox#group
 {
 	background:white;
@@ -56,7 +57,7 @@ QGroupBox#group
 	border-color: #ffffff;
 	padding: 2px;
 }
-
+*/
 QLabel#labelConnectedPort
 {
 	font: 12px;

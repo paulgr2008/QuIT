@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     ipwidget.cpp \
     consolecontroller.cpp \
     consoleview.cpp \
-    clickablelabel.cpp
+    clickablelabel.cpp \
+    linewidget.cpp
 
 HEADERS  += mainwindow.h \
     styleloader.h \
@@ -35,9 +36,11 @@ HEADERS  += mainwindow.h \
     line.h \
     consolecontroller.h \
     consoleview.h \
-    clickablelabel.h
+    clickablelabel.h \
+    linewidget.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    linewidget.ui
 
 RC_FILE += ico.rc
 RESOURCES += \

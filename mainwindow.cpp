@@ -13,6 +13,7 @@
 #include "consoleview.h"
 #define CA_TOOLS
  #include "line.h"
+ Q_DECLARE_METATYPE(line_type_descr_t)
 
 #define NAMEAPP "Quick Installation Tool"
 #define VERSION " v0.0.1b"
@@ -24,7 +25,9 @@ DEFINE_GUID( GUID_DEVINTERFACE_USBDEVICE,0x4D36E978L, 0xE325,
 
 
 bool comparator( const QSerialPortInfo &info1, const QSerialPortInfo &info2 );
-Q_DECLARE_METATYPE(line_type_descr_t)
+bool comparatorLineTypeDescr(int t1, int t2);
+void sortDescrList(QList<int> dev);
+void insertItemToLineCombo(QList<int> dev, QComboBox* box);
 
 MainWindow::MainWindow( QWidget *parent ):QMainWindow( parent ),
             ui( new Ui::MainWindow )
@@ -34,10 +37,11 @@ MainWindow::MainWindow( QWidget *parent ):QMainWindow( parent ),
                           Qt::MSWindowsFixedSizeDialogHint |
                           Qt::MaximizeUsingFullscreenGeometryHint );
     ui->setupUi(this);
-setTitle();
+    setTitle();
     /* List of device names in used */
     devTypeStrings<<"CoolMasterNet"<<"CoolLinkNet"<<"CoolLinkHub"<<"CoolPlug"
                  <<"CoolPlugSuperviser";
+    pagesList<<"line"<<"ifconfig";
     devType = -1;
     defineStyles();
     centralWindow = ui->centralWidget;
@@ -53,7 +57,7 @@ setTitle();
 
     setupModel();
     setupConnectMenu();
-    setupLinesView();
+
     /* GUI on mainwindow form */
     size = new QSize( 403,309 );/* Size of window - the first appearence */
 
@@ -62,18 +66,20 @@ setTitle();
     consoleView = new ConsoleView(serial,echo );
 
 
-    ui->consoleButton->hide();
+    ui->refreshButton->hide();
     ui->tabWidget->hide();
+    ui->tabWidget->setCurrentWidget( ui->hvacLine );
     ui->deviceName->hide();
     ui->deviceVersion->hide();
     ui->labelConnected->hide();
     ui->labelStatus->hide();
-    ui->dipswitch->hide();
-    ui->numberOfLines->hide();
+    ui->frameHeader->hide();
+
     ui->applyButton->hide();
     ui->rebootBtn->hide();
     ui->rebootBtn->setEnabled(false);
     ui->autocompleter->hide();
+    ui->labelDeviceVersion->hide();
     ui->cleanButton->hide();
     isSessionBegin = false;
     sysMsgTimeGate = false;
@@ -95,12 +101,13 @@ void MainWindow::setTitle()
 void MainWindow::setConnectButton()
 {
     connectBtn = new QPushButton(centralWindow);
-    connectBtn->setGeometry(130,64,145,145);
+    connectBtn->setGeometry(15,90,300,50);
     connectBtn->setText("Connect");
     connectBtn->setAutoFillBackground(true);
     connectBtn->setStyleSheet(connectButtonStyle);
     connectBtn->setAttribute(Qt::WA_Hover);
     connectBtn->installEventFilter(this);
+
 
     labelConnectedPort = new QLabel(centralWindow);
     labelConnectedPort->setGeometry(144,148,116,16);
@@ -112,6 +119,8 @@ void MainWindow::setConnectButton()
 
  bool MainWindow::eventFilter( QObject *target, QEvent *event )
  {
+
+     QTime timer;
      if(target==connectBtn)
      {
          QEvent::Type type = event->type();
@@ -124,6 +133,11 @@ void MainWindow::setConnectButton()
                 break;
             case QEvent::MouseButtonPress:
                 connectBtn->setStyleSheet(connectButtonStylePressed);
+                timer.start() ;
+                while( timer.elapsed() < 100 )
+                         qApp->processEvents(0);
+                connectBtn->setStyleSheet(connectButtonStyleDisabled);
+                connectBtn->setText("> Connecting...");
                 break;
             default:break;
             }
@@ -167,50 +181,53 @@ void MainWindow::defineStyles()
                               "border-left:0px solid #ffffff;"
                               "padding: 0px;"
                               "background: #ffffff" );
-    connectButtonStyle = tr( "background: qlineargradient(x1:0,y1:0,x2:0,y2:1,"
-                            "stop:0 #02d39e  ,stop: 1 #013e2f);"
+    connectButtonStyle = tr( "background: rgb(41,171,226);"
                             "border-width: 1px;"
-                            "border-color: #274e13;"
-                            "border-style: solid;"
+                             "border-color: rgb(41,171,226);"
+                             "border-style: solid;"
                             "padding: 5px; "
                             "padding-left:10px;"
                             "padding-right:10px;"
-                            "border-radius: 71px;"
-                            "width: 145px;"
-                            "height: 145px;"
+                            "width: 100px;"
+                            "height: 50px;"
                             "font: bold 20px;"
                             "color: white;");
 
-    connectButtonStyleHover = tr(" background: qlineargradient(x1:0,"
-                                 "y1:0,x2:0,y2:1, stop:0 #00f0b3  ,"
-                                 "stop: 1 #013e2f);"
-                                 "border-width: 1px;"
-                                 "border-color: #274e13;"
-                                 "border-style: solid;"
-                                 "padding: 5px; "
-                                 "padding-left:10px;"
-                                 "padding-right:10px;"
-                                 "border-radius: 71px;"
-                                 "width: 145px;"
-                                 "height: 145px;"
-                                 "font: bold 20px;"
-                                 "color: white;");
+    connectButtonStyleHover = tr(" background: #94b9c9;"
+                                     "border-width: 1px;"
+                                     "border-color: #94b9c9;"
+                                     "border-style: solid;"
+                                     "padding: 5px; "
+                                     "padding-left:10px;"
+                                     "padding-right:10px;"
+                                     "width: 100px;"
+                                     "height: 50px;"
+                                     "font: bold 20px;"
+                                     "color: white;");
+    connectButtonStylePressed = tr("background:#297393;"
+                                      "border-width: 1px;"
+                                      "border-color: #297393;"
+                                      "border-style: solid;"
+                                      "padding: 5px; "
+                                      "padding-left:10px;"
+                                      "padding-right:10px;"
+                                      "width: 100px;"
+                                      "height: 50px;"
+                                      "font: bold 20px;"
+                                      "color: white;");
 
-
-    connectButtonStylePressed = tr("background:qlineargradient(x1:0,y1:0,x2:0,"
-                                   "y2:1,stop:0 #00f0b3  ,stop: 1 #013e2f);"
-                                   "border-width: 2px;"
-                                   "border-color: #0f0f0f;"
-                                   "border-style: solid;"
-                                   "padding: 5px; "
-                                   "padding-left:10px;"
-                                   "padding-right:10px;"
-                                   "border-radius: 71px;"
-                                   "width: 145px;"
-                                   "height: 145px;"
-                                   "font: bold 20px;"
-                                   "color: white;");
-    connectedLabel = tr("font: 12px; color:white;");
+    connectButtonStyleDisabled = tr("background:#b2bfc3;"
+                                       "border-width: 1px;"
+                                       "border-color: #b2bfc3;"
+                                       "border-style: solid;"
+                                       "padding: 5px; "
+                                       "padding-left:10px;"
+                                       "padding-right:10px;"
+                                       "width: 100px;"
+                                       "height: 50px;"
+                                       "font: bold 20px;"
+                                       "color: white;");
+    connectedLabel = tr("font: bold 9px; color:white;");
 
     /* set dot labels style of ip elements*/
     QRegExp rx( "*point*" );
@@ -254,49 +271,78 @@ void MainWindow::defineStyles()
 /*
 * Setup GUI lines presentation
 */
-void MainWindow::setupLinesView()
+void MainWindow::createLinesView()
 {
-     /* Set line labels */
-    QRegExp rx( "label*" );
-    rx.setPatternSyntax( QRegExp::Wildcard );
-    lineLabelList = ui->hvacLine->findChildren<QLabel*>( rx );
-    foreach( QLabel* label, lineLabelList )
+    layoutMainHVAC = new QHBoxLayout;
+    QGroupBox* groupBoxHVACLines = new QGroupBox;
+    QHBoxLayout* layoutHVACLines = new QHBoxLayout;
+    QHBoxLayout* layoutNumberOfHVACLines = new QHBoxLayout;
+    QVBoxLayout* layoutVLines  = new QVBoxLayout;
+    layoutVLines->setSpacing(2);
+
+     /* Dynamicaly set line properties */
+    for (int i=1; i<=nHVACLines[devType]; i++)
     {
+        QLayout* layoutLine;
+        QLabel* labelLine;
+        QComboBox* comboBoxLine;
+        QGroupBox* lineBox;
+        QString styleLineFrameUsed    = tr( ".QGroupBox {background: #256F5B;"
+                                "padding-top: 2px;"
+                                "padding-bottom: 2px;"
+                                "border-radius: 8px;"
+                                "padding-right:4px}" );
+        layoutLine = new QHBoxLayout;
+        layoutLine->setContentsMargins(QMargins(0,0,0,0));
+
+        /* set line label */
+        labelLine=new QLabel(QString("Line %1").arg(i));
         QFont font ( "MS Shell Dlg2",9 );
         font.setBold(true);
-        label->setFont( font );
-        label->setStyleSheet( "#group .QLabel "
-                              "{color: #ffffff; padding-left:10px}" );
-    }
+        labelLine->setFont( font );
+        labelLine->setStyleSheet( "color: #ffffff; padding-left:10px" );
 
-    /* Set line frames */
-    rx.setPattern( "groupBox*" );
-    lineFrameBoxesList = ui->group->findChildren<QGroupBox*>( rx );
+        /* Set line comboBox */
+        comboBoxLine = new QComboBox;
+        comboBoxLine->setFont( font );
 
-    foreach( QGroupBox* frame, lineFrameBoxesList )
-    {
-        frame->setStyleSheet( styleLineFrameDisabled );
-        frame->setAutoFillBackground(true);
-    }
-
-    /* Set comboBoxes */
-    rx.setPattern( "comboBox*" );
-    lineCombosList =  ui->hvacLine->findChildren<QComboBox*>( rx );
-
-    /* Set comboboxes connects */
-
-    for ( int i=0; i<lineCombosList.size();i++ )
-    {
-        connect( lineCombosList[i],SIGNAL( activated( QString ) ),
+        comboBoxLine->setStyleSheet( "color: #000000" );
+        comboBoxLine->setAccessibleName( QString("L%1").arg(i) );
+        //comboBoxLine->installEventFilter(this);
+        connect( comboBoxLine,SIGNAL( activated( QString ) ),
                  this, SLOT( handleLines( QString ) ) );
-        QFont font ( "MS Shell Dlg2",9 );
-        lineCombosList[i]->setFont( font );
-        lineCombosList[i]->setStyleSheet( " color: #000000" );
-        lineCombosList[i]->setEnabled(false);
-        lineCombosList[i]->hide();
-        lineCombosList[i]->setAccessibleName( QString( "L%1" ).arg( i+1 ) );
-        lineCombosList[i]->installEventFilter(this);
+
+        /* Set line frame */
+        lineBox = new QGroupBox;
+        lineBox->setMaximumHeight(26);
+        lineBox->setStyleSheet(styleLineFrameUsed);
+        lineBox->setAutoFillBackground(true);
+
+        /* Add line to layouts */
+        layoutLine->addWidget(labelLine);
+        layoutLine->addWidget(comboBoxLine);
+        lineBox->setLayout(layoutLine);
+        layoutVLines->addWidget(lineBox);
+
+        /* Add combo to general list */
+        lineCombosList.append(comboBoxLine);
     }
+    HVACPorts = new QLabel ("HVAC Port(s) Limit: ");
+    numberOfHVACPort = new QLabel(QString("%1").arg(numbHVAC));
+    QFont font ( "MS Shell Dlg2",9 );
+    font.setBold(true);
+    numberOfHVACPort->setFont( font );
+
+    layoutNumberOfHVACLines->addWidget(HVACPorts);
+    layoutNumberOfHVACLines->addWidget(numberOfHVACPort);
+    layoutNumberOfHVACLines->addStretch();
+    layoutVLines->addStretch(1);
+    layoutVLines->addLayout(layoutNumberOfHVACLines);
+    layoutVLines->addStretch(2);
+    layoutHVACLines->addItem(layoutVLines);
+    groupBoxHVACLines->setLayout(layoutHVACLines);
+    layoutMainHVAC->addWidget(groupBoxHVACLines);
+    ui->hvacLine->setLayout(layoutMainHVAC);
 }
 
 /*
@@ -306,19 +352,9 @@ void MainWindow::handleLines( QString str )
 {
     QComboBox* senderBox = dynamic_cast<QComboBox*>( sender() );
     QString strLine = senderBox->accessibleName();
-
-    if ( numbHVAC>1 )
-        comboBoxFilter();
-    else
-        foreach ( QComboBox* box, lineCombosList )
-            if( senderBox!=box&&senderBox->isEnabled() )
-            {
-                box->setCurrentIndex( box->findData("Unused",Qt::DisplayRole) );
-                sortItems();
-            }
-
-    createDipSwitches();
-
+    comboBoxFilter();
+    // createDipSwitches();
+    //box->setCurrentIndex( box->findData("Unused",Qt::DisplayRole) );
     /* send command */
     commandBuffer.insert( "line type "+strLine+" ", str );
     ui->applyButton->setEnabled(true);
@@ -329,104 +365,77 @@ void MainWindow::handleLines( QString str )
 */
 void MainWindow::comboBoxFilter()
 {
-    int count            = 0;
-    int countGRType      = 0;
-    int countLineType    = 0;
-    int hiddenItemsCount = 0;
-    QVariant data;
-    QVariant firstData;
+    int countGRTypes      = 0;
+    int countUsedTypes    = 0;
+    bool hasGreeLine = false;
     uint8_t dev;
-    uint8_t first;
-    line_type_descr_t firstDescr;
-    line_type_descr_t descr;
+    uint8_t selectedDevice;
 
     for( int i=0; i<lineCombosList.size(); i++ )
     {
-        QComboBox* b = lineCombosList.at(i);
-        firstData = b->currentData( Qt::UserRole );
-        firstDescr = firstData.value<line_type_descr_t>();
-        first = firstDescr.ac_type;
+        QComboBox* box = lineCombosList.at(i);
+        QListView* listVw = qobject_cast<QListView*>( box->view() );
+        listVw->setRowHidden(i,true);
+        selectedDevice = line_types[(box->currentData()).value<int>()].ac_type;
 
-        if ( first == LINE_AC_TYPE_UNUSED
-           ||first == LINE_AC_TYPE_PBM )
+        if ( (selectedDevice == LINE_AC_TYPE_UNUSED) || (selectedDevice == LINE_AC_TYPE_PBM) )
             continue;
 
-        if( first==LINE_AC_TYPE_GR )
+
+
+
+        if( selectedDevice==LINE_AC_TYPE_GR  )
+        {
+            countGRTypes++;
+            if ( !hasGreeLine )
             {
-                 countGRType++;
+                countUsedTypes++;
+                hasGreeLine = true;
+                continue;
             }
-            else countLineType++;
+        }
+        else countUsedTypes++;
     }
 
-    if( countGRType )
-        count = countLineType + 1;
-    else count = countLineType;
-
-    if( count >= numbHVAC )
+    if( countUsedTypes >= numbHVAC || countGRTypes>3 )
     {
 
         foreach( QComboBox* box, lineCombosList )
         {
             QListView* listVw = qobject_cast<QListView*>( box->view() );
+            selectedDevice = line_types[(box->currentData()).value<int>()].ac_type;
 
-            firstData = box->currentData();
-            firstDescr = firstData.value<line_type_descr_t>();
-            first = firstDescr.ac_type;
+            qDebug()<<box->currentText();
+            qDebug()<<box->accessibleName()<<" "<<"items: "<<box->count();
+            box->setMaxVisibleItems(box->count());
 
-            //qDebug()<<box->currentText();
-            //qDebug()<<box->accessibleName()<<" "<<"items: "<<box->count();
-            for( int i=1; i<box->count(); i++ )
+            if( (selectedDevice == LINE_AC_TYPE_UNUSED) ||
+                (selectedDevice == LINE_AC_TYPE_PBM)||
+                (( selectedDevice == LINE_AC_TYPE_GR ) && (countGRTypes>3)) )
             {
-                data = box->itemData( i,Qt::UserRole );
-                descr = data.value<line_type_descr_t>();
-                dev = descr.ac_type;
-
-            if(  first == LINE_AC_TYPE_UNUSED
-               ||first == LINE_AC_TYPE_PBM )
-            {
-                    if(    dev != LINE_AC_TYPE_UNUSED
-                        && dev != LINE_AC_TYPE_PBM
-                        && dev != LINE_AC_TYPE_GR   )
+                for( int i=0; i<box->count(); i++ )
+                {
+                    dev = line_types[box->itemData( i,Qt::UserRole ).value<int>()].ac_type;
+                    if ( (dev != LINE_AC_TYPE_UNUSED) && (dev != LINE_AC_TYPE_PBM) )
                     {
-                        listVw->setRowHidden( i,true );
-                        hiddenItemsCount++;
-                    }
-
-                    if ( dev == LINE_AC_TYPE_GR )
-                    {
-                        if( countGRType == 4 || countLineType>=numbHVAC )
-                        {
+                        if ( (dev != LINE_AC_TYPE_GR))
                             listVw->setRowHidden( i,true );
-                            hiddenItemsCount++;
-                        }
+                        if((dev == LINE_AC_TYPE_GR))
+                            if ((countGRTypes>3)||(!hasGreeLine) )
+                                listVw->setRowHidden( i,true );
+
                     }
+                }
             }
-            else if ( first == LINE_AC_TYPE_GR )
-            {
-                    if ( dev != LINE_AC_TYPE_UNUSED
-                         &&dev != LINE_AC_TYPE_PBM )
-                    {
-                        listVw->setRowHidden( i,true );
-                        hiddenItemsCount++;
-                    }
-            }
-            else
-            {
-                    if ( dev == LINE_AC_TYPE_GR )
-                    {
-                        if ( countGRType == 4 )
-                        {
+            else if ( (selectedDevice != LINE_AC_TYPE_UNUSED) && (selectedDevice != LINE_AC_TYPE_PBM) &&
+                      (selectedDevice!=LINE_AC_TYPE_GR) && (countGRTypes>3) )
+                for( int i=0; i<box->count(); i++ )
+                {
+                    dev = line_types[box->itemData( i,Qt::UserRole ).value<int>()].ac_type;
+                    if ( (dev == LINE_AC_TYPE_GR) )
                             listVw->setRowHidden( i,true );
-                            hiddenItemsCount++;
-                        }
-                    }
-            }
-        }
-            if ( hiddenItemsCount==box->count()-1 )
-                     box->setEnabled(false);
-                    //qDebug()<<"hidden items: "<<hiddenItemsCount;
-                hiddenItemsCount=0;
-            }
+                 }
+         }
     }
     else
     {
@@ -442,14 +451,15 @@ void MainWindow::comboBoxFilter()
         }
     }
 
-    if ( lineCombosList.at(1)->currentText()
-              .compare( "unused",Qt::CaseInsensitive ) )
-        lineCombosList.at(5)->setEnabled(false);
-    else if ( lineCombosList.at(5)->currentText()
-              .compare( "unused",Qt::CaseInsensitive ) )
-        lineCombosList.at(1)->setEnabled(false);
+    if ( !(lineCombosList.at(0)->currentText().contains( "unused",Qt::CaseInsensitive )) )
+        lineCombosList.at(4)->setEnabled(false);
+    else lineCombosList.at(4)->setEnabled(true);
 
-    sortItems();
+    if ( !(lineCombosList.at(4)->currentText().contains( "unused",Qt::CaseInsensitive )) )
+        lineCombosList.at(0)->setEnabled(false);
+    else lineCombosList.at(0)->setEnabled(true);
+
+    //sortItems();
 }
 
 /*
@@ -459,35 +469,79 @@ void MainWindow::setLinesInitialState()
 {
     int offset = 0;
     uint32_t lineType ;
+
     foreach( QComboBox* box, lineCombosList )
-        box->clear();
-
-    for( int i=0; i<static_cast<int>( sizeof( line_types )
-                                      /sizeof( line_type_descr_t ) );i++ )
     {
-        if ( devType == COOLINK )
-            offset = 8;
-        else if ( devType== COOLPLUG )
-            offset = 16;
-        lineType = line_types[i].lines>>offset;
+        box->clear();
+    }
 
-        for( int line = 0; line<nHVACLines[devType]; line++ )
+    if ( devType == COOLINK )
+        offset = 8;
+    else if ( devType== COOLPLUG )
+        offset = 16;
+
+
+    for( int line = 0; line<nHVACLines[devType]; line++ )
+    {
+        QList<int> devLine;
+        QList<int> devNonline;
+
+        for( int i=0; i<static_cast<int>( sizeof( line_types )
+                                      /sizeof( line_type_descr_t ) );i++ )
         {
-            if ( ( lineType&( 1<<line ) )!=0 )
+            lineType = line_types[i].lines>>offset;
+
+
+            if ( (lineType&( 1<<line ))!=0 )
             {
-                QVariant var = QVariant::fromValue( line_types[i] );
+
 
                 if( QString(line_types[i].func_str).compare("BIST") )
-                    lineCombosList.at( line )->addItem( line_types[i].
-                                                        ac_type_str,var );
-
+                {
+                    if ( line_types[i].ac_type ==LINE_AC_TYPE_UNUSED
+                         || line_types[i].ac_type ==LINE_AC_TYPE_PBM)
+                    {
+                       devNonline.append(i);
+                    }
+                    else
+                    {
+                       devLine.append(i) ;
+                    }
+                }
             }
         }
+       sortDescrList(devLine);
+       sortDescrList(devNonline);
+       insertItemToLineCombo(devLine,lineCombosList.at( line ));
+
+       lineCombosList.at( line )->insertSeparator( devLine.count() );
+       insertItemToLineCombo(devNonline, lineCombosList.at( line ));
     }
-   // sortItems();
-    setLinesViewStyle();
+}
+void insertItemToLineCombo(QList<int> dev, QComboBox* box)
+{
+    foreach(int t, dev)
+    {
+        QString nameStr;
+        QVariant var = QVariant::fromValue( t );
+
+        if( QString(line_types[t].func_str).contains("Unused"))
+            nameStr =  QString(line_types[t].func_str);
+        else
+            nameStr = QString(line_types[t].func_str)+"\t("+QString(line_types[t].ac_type_str)+")";
+        box->addItem( nameStr,var );
+    }
 }
 
+void sortDescrList(QList<int> dev)
+{
+    qSort( dev.begin(),dev.end(),comparatorLineTypeDescr );
+}
+
+bool comparatorLineTypeDescr(int t1, int t2)
+{
+    return strcmp(line_types[t1].ac_type_str,line_types[t2].ac_type_str);
+}
 /*
  * sort combobox list by device name
 */
@@ -504,19 +558,6 @@ void MainWindow::sortItems()
     }
 }
 
-/*
- * Set view style of lines
-*/
-void MainWindow::setLinesViewStyle()
-{
-    for ( int i =0 ; i<nHVACLines[devType]; i++ )
-    {
-        lineLabelList.at(i)->setText( QString( "Line %1" ).arg(i) );
-        lineCombosList.at(i)->setEnabled(true);
-        lineCombosList.at(i)->show();
-        lineFrameBoxesList.at(i)->setStyleSheet( styleLineFrameUsed );
-    }
-}
 
 /*
  * Operations with dip switches images
@@ -531,15 +572,15 @@ void MainWindow::createDipSwitches()
     resetSwitches();
 
     /*P switches*/
-    if ( !lineCombosList.at(1)->currentText()
+    if ( !lineCombosList.at(0)->currentText()
             .contains( "unused",Qt::CaseInsensitive ) )
            switchOn( "p",2,0 );
-    else if ( !lineCombosList.at(5)->currentText()
+    else if ( !lineCombosList.at(4)->currentText()
              .contains( "unused",Qt::CaseInsensitive ) )
            switchOn( "p",2,1 );
-    else if ( lineCombosList.at(1)->currentText()
+    else if ( lineCombosList.at(0)->currentText()
              .contains( "unused",Qt::CaseInsensitive )
-             && lineCombosList.at(5)->currentText()
+             && lineCombosList.at(4)->currentText()
              .contains( "unused",Qt::CaseInsensitive ) )
            switchOn( "p",2,0 );
     switchOn( "p",0,0 );
@@ -571,7 +612,7 @@ void MainWindow::createDipSwitches()
     switchesHandler( "q",code );
 
     /* R switches*/
-    box = lineCombosList.at(1);
+    box = lineCombosList.at(0);
     var = box->currentData();
     descr = var.value<line_type_descr_t>();
     switch( descr.ac_type )
@@ -648,9 +689,6 @@ void MainWindow::setupConnectMenu()
     connectAction = new QAction( tr( "&Connect" ), this );
     ui->menuConnect->addAction( connectAction );
     connectAction->setEnabled(false);
-    resetConfiguration = new QAction( tr( "&Refresh" ),this );
-    resetConfiguration->setEnabled(false);
-    ui->menuConnect->addAction( resetConfiguration );
 }
 
 /*
@@ -848,12 +886,8 @@ void MainWindow::handleNetconfigPage( QString str )
 */
 void MainWindow::initGUIConnections()
 {
-    connect( resetConfiguration, SIGNAL( triggered() ),
-             this, SLOT( getInitInformation() ) );
-    //connect( model,SIGNAL( itemChanged( QStandardItem* ) ),
-    //this,SLOT( handleNetconfigPage( QStandardItem* ) ) );
-    connect( ui->autoipCheckBox,SIGNAL( stateChanged( int ) ),
-             this, SLOT( autoipCheckBoxState( int ) ) );
+    connect( ui->refreshButton, SIGNAL( clicked() ),
+             this, SLOT( getPageInformation() ) );
     connect( serial, SIGNAL( error( QSerialPort::SerialPortError ) ),
              this, SLOT( handleError( QSerialPort::SerialPortError ) ) );
     connect( portsMenu, SIGNAL( triggered( QAction* ) ),
@@ -883,62 +917,55 @@ void MainWindow::initGUIConnections()
 /*
 * Run console view
 */
-void MainWindow::on_consoleButton_clicked()
+void MainWindow::runConsoleView()
 {
-    if ( !ui->consoleButton->text().compare("Console",Qt::CaseInsensitive) )
+    setMinimumSize(0, 0);
 
+    ui->tabWidget->hide();
+    ui->mainGridLayout->removeWidget( ui->tabWidget );
+
+    if ( !consoleView->consoleIsRunning() )
+            consoleView->runConsole();
+
+    ui->mainGridLayout->addWidget( consoleView,1,0 );
+
+    if ( consoleView->isHidden() )
     {
-        setMinimumSize(0, 0);
-
-        ui->tabWidget->hide();
-        ui->mainGridLayout->removeWidget( ui->tabWidget );
-
-        if ( !consoleView->consoleIsRunning() )
-                consoleView->runConsole();
-
-        ui->mainGridLayout->addWidget( consoleView,1,0 );
-
-        if ( consoleView->isHidden() )
-        {
-            consoleView->show();
-            consoleView->setConsoleSignalConnections(true);
-        }
-        connect( ui->autocompleter,SIGNAL( stateChanged(int) ),
-             consoleView->getConsoleController(), SLOT( setAutocomplete(int)) );
-        connect ( ui->cleanButton, SIGNAL(clicked()),
-             consoleView->getConsoleController(), SLOT( cleanConsole()) );
-        ui->cleanButton->show();
-        ui->autocompleter->show();
-        ui->applyButton->hide();
-        ui->rebootBtn->hide();
-
-        if(devType==COOLPLUG)
-            ui->consoleButton->hide();
-        else ui->consoleButton->setText("Back To Config");
-        this->setBaseSize(557,419);
-        this->setMinimumSize(557,419);
-
-        QRect rect = QApplication::desktop()->screenGeometry();
-        this->setMaximumSize(rect.width(),rect.height());
+        consoleView->show();
+        consoleView->setConsoleSignalConnections(true);
     }
-    else
-    {
-        setMinimumSize(0, 0);
-        consoleView->hide();
-        ui->mainGridLayout->removeWidget(consoleView);
-        consoleView->setConsoleSignalConnections(false);
+    connect( ui->autocompleter,SIGNAL( stateChanged(int) ),
+        consoleView->getConsoleController(), SLOT( setAutocomplete(int)) );
+    connect ( ui->cleanButton, SIGNAL(clicked()),
+        consoleView->getConsoleController(), SLOT( cleanConsole()) );
+    ui->cleanButton->show();
+    ui->autocompleter->show();
+    ui->applyButton->hide();
+    ui->rebootBtn->hide();
+    ui->refreshButton->setEnabled(false);
 
-        ui->mainGridLayout->addWidget(ui->tabWidget,1,0);
-        ui->tabWidget->show();
-        ui->autocompleter->hide();
-        ui->cleanButton->hide();
-        ui->applyButton->show();
-        ui->rebootBtn->show();
-        ui->consoleButton->setText("Console");
-        this->setFixedSize(557,419);
-    }
+    this->setBaseSize(557,451);
+    this->setMinimumSize(557,451);
+
+    QRect rect = QApplication::desktop()->screenGeometry();
+    this->setMaximumSize(rect.width(),rect.height());
 }
 
+void MainWindow::closeConsoleView()
+{
+    setMinimumSize(0, 0);
+    consoleView->hide();
+    ui->mainGridLayout->removeWidget(consoleView);
+    consoleView->setConsoleSignalConnections(false);
+    ui->refreshButton->setEnabled(true);
+    ui->mainGridLayout->addWidget(ui->tabWidget,1,0);
+    ui->tabWidget->show();
+    ui->autocompleter->hide();
+    ui->cleanButton->hide();
+    ui->applyButton->show();
+    ui->rebootBtn->show();
+    this->setFixedSize(557,451);
+}
 /*
 *  Handling with tab widget pages
 */
@@ -948,10 +975,17 @@ void MainWindow::tabOperating( int index )
     switch(index)
     {
         case 0:
+            if ( consoleView->consoleIsRunning() )
+                closeConsoleView();
             dataHandler("line");
             break;
         case 1:
+            if ( consoleView->consoleIsRunning() )
+                closeConsoleView();
             dataHandler("ifconfig");
+            break;
+        case 2:
+            runConsoleView();
             break;
         default:
             break;
@@ -1116,17 +1150,6 @@ void MainWindow::IPSettingsHandler( bool b )
 }
 
 /*
- * Set IP manually setting checker
- */
-void MainWindow::autoipCheckBoxState( int state )
-{
-    //if ( isSessionBegin )
-        commandBuffer.insert( "Autoip", QString( "%1" ).arg( state ) );
-        ui->applyButton->setEnabled(true);
-}
-
-
-/*
  * Create command line for sending to device
  */
 void MainWindow::createCommandLine()
@@ -1152,8 +1175,6 @@ void MainWindow::createCommandLine()
                 }
             else continue;
             }
-            else if( header.contains("Autoip") )
-                val = val.contains( "0" )?"0":"1";
 
             if( header.contains( "line type" ) )
                 commandLine = header+val;
@@ -1228,6 +1249,10 @@ void MainWindow::openSerialPort()
                     return;
             }
         }
+
+        if( devType != COOLPLUG )
+             getPageInformation();
+
         isSessionBegin = true;
         openSession();
         ui->labelConnected->setText( "Connected" );
@@ -1273,7 +1298,7 @@ bool MainWindow::checkDeviceInitialState()
     {
         sendData( "\n" );
         buffer = getData();
-
+        qDebug()<<buffer;
         if( buffer.contains( "\n>" ) )
             return true;
     }
@@ -1293,23 +1318,25 @@ void MainWindow::closeSerialPort()
 
 void MainWindow::closeSession()
 {
+    if (consoleView->consoleIsRunning())
+            closeConsoleView();
+
     foreach( QComboBox* combo, lineCombosList )
          combo->clear();
 
     connectBtn->show();
     labelConnectedPort->show();
 
-    connectAction->setText( "Connect" );
     this->setFixedSize(*size );
-    ui->consoleButton->hide();
+    ui->refreshButton->hide();
     ui->labelConnected->hide();
     ui->labelStatus->hide();
-    resetConfiguration->setEnabled(false);
-    ui->dipswitch->hide();
-    ui->numberOfLines->hide();
+    ui->frameHeader->hide();
+
     ui->autocompleter->hide();
     ui->deviceName->hide();
     ui->deviceVersion->hide();
+    ui->labelDeviceVersion->hide();
     ui->tabWidget->hide();
     ui->applyButton->hide();
     ui->rebootBtn->hide();
@@ -1392,7 +1419,7 @@ int MainWindow::dataHandler( const QString &command )
         if ( isSessionBegin )
         {
             showStatusMessage( tr( "Device unavailable" ),10000 );
-            ui->labelConnected->setText( "Timeout" );
+            ui->labelConnected->setText( "Unavailable" );
             ui->labelConnected->setStyleSheet( "color: red" );
         }
         else
@@ -1485,16 +1512,14 @@ void MainWindow::fillLinesForm( QList<QStringList> rows )
         nLine = strKey.data()[1].digitValue(); /*set line number*/
 
         lineProperty = rows[i].at(1).split( " " );
+        selectedDevices.append(lineProperty.at(0));
         lineCombosList.at( nLine-1 )->
                                 setCurrentIndex( lineCombosList.at( nLine-1 )->
-                              findData( lineProperty.at(0),Qt::DisplayRole ) );
-        lineLabelList.at( nLine-1 )->setText( QString( "Line %1" ).arg(nLine) );
+                              findText( lineProperty.at(0),Qt::MatchContains ) );
     }
-    ui->numberOfLines->setText( QString( "HVAC lines: %1" ).arg( numbHVAC ) );
 
-    if ( numbHVAC>1 )
-        comboBoxFilter();
-    createDipSwitches();
+    comboBoxFilter();
+   // createDipSwitches();
 }
 
 /*
@@ -1512,7 +1537,7 @@ void MainWindow::getDeviceInfo( QString version )
         devType = COOLINK;
 
     ui->deviceName->setText( devTypeStrings[devType] );
-    ui->deviceVersion->setText( "S/N "+version );
+    ui->deviceVersion->setText( version );
 }
 
 /*
@@ -1521,7 +1546,6 @@ void MainWindow::getDeviceInfo( QString version )
 void MainWindow::fillNetworkConfigForm( QList<QStringList> rows )
 {
     QStringList rowElements;
-    bool flag;
     QRegExp exp ("[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}");
 
     foreach ( rowElements,rows )
@@ -1530,14 +1554,6 @@ void MainWindow::fillNetworkConfigForm( QList<QStringList> rows )
                 ui->macLineEdit->setText( rowElements[1] );
         else if( rowElements[0].contains( "link",Qt::CaseInsensitive ) )
                 continue;
-        else if ( rowElements[0].contains( "autoip",Qt::CaseInsensitive ) )
-        {
-            flag = rowElements[1].contains( "Yes",Qt::CaseInsensitive )? true : false;
-            ui->autoipCheckBox->setChecked( flag );
-        }
-
-
-
         else if ( rowElements[1].contains( exp ) )
         {
             if ( rowElements[0].contains( "IP", Qt::CaseInsensitive ) )
@@ -1554,10 +1570,20 @@ void MainWindow::fillNetworkConfigForm( QList<QStringList> rows )
             }
 
             ipWidgetMap.value( QString( "%1" )
-                                   .arg( rowElements[0].trimmed() ))
-                                    ->setIP(rowElements[1]);
+                       .arg(rowElements[0].trimmed()))->setIP(rowElements[1]);
         }
     }
+}
+
+/*
+ * Get information for current info page
+ */
+void MainWindow::getPageInformation()
+{
+
+    int index = ui->tabWidget->currentIndex();
+    qDebug()<<"index: "<<index;
+    dataHandler ( pagesList.at(index) );
 }
 
 /*
@@ -1565,21 +1591,12 @@ void MainWindow::fillNetworkConfigForm( QList<QStringList> rows )
  */
 bool MainWindow::getInitInformation()
 {
-    QStringList list;
-    list << "set"<<"line"<<"ifconfig";
-
-    for( int i =0 ; i<list.size();i++ )
-    {
-        /* Coolplug have onle console view for user without permition */
-        if( devType == COOLPLUG && i == N_INFO_TABS )
-            break;
-
-        dataHandler( list.at(i) );
-        if ( i==0 )
-            setLinesInitialState();
-    }
+   dataHandler( "set" );
+   createLinesView();
+   setLinesInitialState();
    return true;
 }
+
 
 /*
  * Reboot processing
@@ -1587,7 +1604,6 @@ bool MainWindow::getInitInformation()
 void MainWindow::on_rebootBtn_clicked()
 {
     QTime timer;
-
     showStatusMessage( tr( "Wait, please!.." ),10000 );
     ui->labelConnected->setText( "Initializing..." );
     ui->labelConnected->setStyleSheet( "color: red" );
@@ -1644,22 +1660,20 @@ void MainWindow::openSession()
     case COOLMASTER:
     case COOLINK:
         ui->networkConfigBtn->setEnabled(true);
-        ui->autoipCheckBox->show();
-        ui->tabWidget->setCurrentWidget( ui->netSet );
+
         ui->applyButton->show();
         ui->applyButton->setEnabled(false);
         ui->rebootBtn->show();
     case COOLPLUGADMIN:
         ui->tabWidget->show();
-        ui->dipswitch->show();
-        ui->numberOfLines->show();
+        //ui->numberOfLines->show();
         ui->hvacLine->setEnabled(true);
         break;
     case COOLPLUG:
-        on_consoleButton_clicked();
+        runConsoleView();
         return;
     }
-    this->setFixedSize(557,419);
+    this->setFixedSize(557,451);
 }
 
 void MainWindow::manageGlobalElements()
@@ -1668,14 +1682,18 @@ void MainWindow::manageGlobalElements()
     connectBtn->hide();
     connectAction->setText( "Disconnect" );
     connectAction->setEnabled(true);
-    ui->consoleButton->show();
+    ui->refreshButton->show();
     ui->labelConnected->show();
     ui->labelStatus->show();
+    ui->frameHeader->show();
+    ui->frameHeader->setStyleSheet("#frameHeader "
+                                   "{ border: 1px solid green;"
+                                   "margin-left: 2px; margin-right: 2px; }");
     ui->labelConnected->setText( "Connected" );
     ui->labelConnected->setStyleSheet( "color: rgb( 81, 147, 49 )" );
     ui->deviceName->show();
     ui->deviceVersion->show();
-    resetConfiguration->setEnabled(true);
+    ui->labelDeviceVersion->show();
 }
 
 /*
