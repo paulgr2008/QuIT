@@ -1,2 +1,6 @@
-<RCC/>
-
+<RCC>
+    <qresource prefix="/">
+        <file>Helvetica.ttf</file>
+        <file>Helvetica-Bold.ttf</file>
+    </qresource>
+</RCC>

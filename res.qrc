@@ -1,10 +1,30 @@
 <RCC>
     <qresource prefix="/">
-        <file>images/buttonGreen.png</file>
-        <file>images/buttonGreenHover.png</file>
-        <file>images/buttonGreenPressed.png</file>
         <file>images/icon1.png</file>
         <file>images/switches.png</file>
         <file>xmlfile.txt</file>
+        <file>fonts/Helvetica.ttf</file>
+        <file>fonts/Helvetica-Bold.ttf</file>
+        <file>images/Alert-icon.png</file>
+        <file>images/Arrow-right.png</file>
+        <file>images/Arrow-right-grey.png</file>
+        <file>otf/LinotypeBold.otf</file>
+        <file>otf/LinotypeLight.otf</file>
+        <file>otf/LinotypeMedium.otf</file>
+        <file>otf/LinotypeThin.otf</file>
+        <file>otf/Linotype.otf</file>
+        <file>images/Arrow-down.png</file>
+        <file>images/on_arrow.png</file>
+        <file>images/on_arrow_light.png</file>
+        <file>images/switch_off.png</file>
+        <file>images/switch_off_light.png</file>
+        <file>images/switch_on.png</file>
+        <file>styles.css</file>
+        <file>xmlfile_cp.txt</file>
+        <file>images/usb.png</file>
+        <file>images/devices_alt.png</file>
+        <file>images/port-icon.png</file>
+        <file>images/data_cable.png</file>
+        <file>fonts/Inconsolata.otf</file>
     </qresource>
 </RCC>

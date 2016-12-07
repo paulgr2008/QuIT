@@ -1,136 +1,526 @@
-
-QPushButton#connectBtn 
+QPushButton[configButton="true"] 
 { 
-    background: qlineargradient(x1:0,y1:0,x2:0,y2:1, stop:0 #02d39e  ,stop: 1 #013e2f);
-    border-width: 1px; 
-    border-color: #274e13; 
-    border-style: solid; 
-    padding: 5px; 
-    padding-left:10px; 
-    padding-right:10px; 
-    border-radius: 71px;
-	width: 145px;
-	height: 145px;
-	font: bold 20px;
+    background: #29abe2;
+    font: bold 14px;
 	color: white;
+	border: 1px solid #29abe2;
+	min-width: 6em;
+    padding: 6px;
 }
-QPushButton#connectBtn:hover
+#rebootButton
+{ 
+    background: #9a27f3;
+    font: bold 14px;
+	color: white;
+	border: 1px solid #9a27f3;
+	min-width: 6em;
+    padding: 6px;
+}
+
+#rebootButton:pressed 
 {
-	background: qlineargradient(x1:0,y1:0,x2:0,y2:1, stop:0 #00f0b3  ,stop: 1 #013e2f);
+    background:#297393; 
+	border: 1px solid #297393;
+	
+}
+
+#rebootButton:disabled 
+{
+    background:transparent; 
+	border: 1px solid #b2bfc3;
+	font: bold 14px;
+	color: #b2bfc3;
+	
+}
+
+#rebootButton:hover 
+{
+    background: #94b9c9;
+	border: 1px solid #94b9c9;
+	
+}
+
+
+QPushButton[configButton="true"]:hover
+{
+	background: #94b9c9;
+	border: 1px solid #94b9c9;
    
 } 
 
-/*
-QPushButton#connectBtn 
-{ 
-    background: #013e2f;
-    border-width: 1px; 
-    border-color: #274e13; 
-    border-style: solid; 
-    padding: 5px; 
-    padding-left:10px; 
-    padding-right:10px; 
-    border-radius: 71px;
-	width: 145px;
-	height: 145px;
-	font: bold 20px;
-	color: white;
-}
-QPushButton#connectBtn:hover
+QPushButton[configButton="true"]:pressed 
 {
-	background: #013e2f;
-    
-} 
-*/
-QPushButton#connectBtn:pressed 
-{
-    background:qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 #00f0b3  ,stop: 1 #013e2f); 
-	border-width: 2px; 
-    border-color: #0f0f0f;
+    background:#297393; 
+	border: 1px solid #297393;
 	
 }
-/*
-QGroupBox#group
+QPushButton[configButton="true"]:disabled 
 {
-	background:white;
-	border-width: 2px;
-	border-color: #ffffff;
-	padding: 2px;
-}
-*/
-QLabel#labelConnectedPort
-{
-	font: 12px;
-	color:white;
-}
-/*
-QWidget#hvacLine
-{
-	background: rgb(240,240,240);
+    background:transparent; 
+	border: 1px solid #b2bfc3;
+	font: bold 14px;
+	color: #b2bfc3;
+	
 }
 
-QWidget#netSet
+*[greyFrame="true"]
 {
-	background: rgb(240,240,240);
+	border: 1px solid #b2bfc3;
+	font-size: 9pt;
+	font-family: "Tahoma";
+	color: #283942;
 }
 
-*/
-
-
-
-/*#group .QGroupBox {background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1,stop:0 #00f0b3 ,stop: 1 #013e2f);
-                          border-top: 2px solid #f0f0f0;
-                          padding-top: 2px;
-                          padding-bottom: 2px;
-                          padding-right:4px;
-						  }
-
-
-
-
-
-#comboBox_1,#comboBox_2,#comboBox_3,#comboBox_4,#comboBox_5,#comboBox_6,#comboBox_7,#comboBox_8
-{
-	background: white
-}
-
-/*background:qlineargradient(x1:0,y1:0,x2:0,y2:1,stop:0 #00f0b3  ,stop: 0.5 #02795c, stop: 1 #00f0b3); 	*/
-
-/*
-QPushButton#connectBtn
-{	
-	border-image:url(:/images/buttonGreen.png) 7px;
-	border-width: 7px;
-	border-color: black;
-	width: 145px;
-	height: 145px;
-	border-radius: 71px;
-	font: bold 20px;
+#connectBtn 
+{ 
+	background: rgb(41,171,226);
+	border: 1px solid rgb(41,171,226);
+	padding-left:20px;
+    padding-right:10px;
+    padding-top:10px;
+    padding-bottom:10px;
+    width: 200px;
+    height: 30px;
+    text-align: left;
+    font-size: 24px;
 	color: white;
-
-		
 }
-QPushButton#connectBtn:pressed {
-    border-image:url(:/images/buttonGreenPressed.png) 7px;
-	border-width: 7px;
-}
-
-QPushButton#connectBtn:checked {
-    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #f0eeaa, stop: 1 #eeaa88);
-
-}
-
-QPushButton#connectBtn:hover:!pressed
+#connectBtn:hover
 {
-	border-image:url(:/images/buttonGreenHover.png) 7px;
-	border-width: 7px;
+	background: #94b9c9;
+    border: 1px solid #94b9c9;
 }
-*/
+
+#connectBtn:pressed
+{
+	background: #297393;
+    border: 1px solid #297393;
+}	
+
+#connectBtn:disabled
+{
+	background:rgb(255,255,255,0);
+    border: 1px solid #b2bfc3;
+    width: 200px;
+    height: 30px;
+    text-align: left;
+    font-size: 24px;
+    color: #b2bfc3;
+}
+
+#connectBtn[connectionStart="true"]
+{
+	background: #b2bfc3;
+    border: 1px solid #b2bfc3;
+	
+}	
+
+/* ----------------warning widget-----------------*/
+
+/* warning box *[warningBtn="true"]*/
+#warningBox	
+{
+	background: #9a27f3;
+	border: 1px solid #9a27f3;
+}
+
+#warningText 
+{
+	background: #9a27f3;
+	color: white;
+	font-family: "Neue Haas Unica Pro";
+	font-size: 20px; 
+}
+
+QPushButton[warning="true"]
+{
+	background: #9a27f3;
+    border: 1px solid white;
+    font-size: 16px;
+    min-width: 4em;
+    padding-left: 4px;
+    padding-right:4px;
+    color: white;
+}
+
+QPushButton[warning="true"]:hover
+{
+	
+	background: white;
+    color: #9a27f3;
+}
+
+QPushButton[warning="true"]:pressed
+{
+
+	background: rgb(255,255,255,100);
+    color: #9a27f3;
+}
+
+#quitButton
+{
+	background: #9a27f3;
+    border: 1px solid white;
+    font-size: 16px;
+    color: white;
+}
+
+#quitButton:hover
+{
+	background: white;
+    color: #9a27f3;
+}		
+
+#quitButton:pressed
+{
+	background: rgb(255,255,255,100);
+	color: #9a27f3;
+}
+
+/* -------------   warning widget   --------------*/
+/*------------------------------------------------*/
 
 
+/* connection label on main page */
+*[labelConnectedPort="true"] 
+{
+	font-size: 16px; 
+	color:#29abe2;
+}
+/* ip dot*/
+QLabel[dotLabel="true"] 
+{
+	background: white;
+	border: 0px solid white;
+	padding: 0px;
+}
 
-/*qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #f6fcff, stop: 1.0 #a0b0d0);
-	border: 1px solid #a0a0b0;
-	border-radius: 65px;*/
+
+*[warning="true"]{
+
+background: #9a27f3;
+border: 1px solid white;
+font-size: 16px;
+padding-left: 2px;
+padding-right:2px;
+color: white;
+
+}
+
+*[warning="true"]:hover
+{
+	background: white;
+	border: 1px solid white;
+	color: #9a27f3;
+   
+} 
+
+*[warning="true"]:pressed 
+{
+    background:#297393; 
+	border: 1px solid #297393;
+	
+}
+
+#deviceNameLabel
+{
+	font-size: 14pt;
+	color: #283942;
+	font-family: "Neue Haas Unica Pro Light";
+}
+#labelConnected[connected="true"]
+{
+	font-size: 9pt;
+	font-weight: bold;
+	color: rgb(81, 147, 49);
+	min-width: 5em;
+	padding-left: 2px;
+	font-family: "Neue Haas Unica Pro Medium";
+}
+
+#labelConnected[connected="false"]
+{
+	font-size: 9pt;
+	font-weight: bold;
+	color: red;
+	min-width: 5em;
+	padding-left: 2px;
+	font-family: "Neue Haas Unica Pro Medium";
+}
+/*------------------------------------------------*/
+/*------------------- tabWidget  ---------------- */
+
+QTabWidget::pane { /* The tab widget frame */
+	
+	border: 1px solid #b2bfc3;
+	background-color: white;
+	position: absolute;
+	top: -1px;
+	
+}
+
+
+/* Style the tab using the tab sub-control. Note that
+    it reads QTabBar _not_ QTabWidget */
+QTabBar::tab {
+	font-size: 9pt;
+	font-family: "Tahoma";
+	color: #283942;
+	border-top: 1px solid #b2bfc3;
+	border-right: 1px solid #b2bfc3;
+	border-bottom: 1px solid #b2bfc3;
+	margin-top: 5px;
+	min-width: 150px;
+	min-height: 25px;
+	
+}
+
+QTabBar[singleType="true"]::tab {
+	font-size: 9pt;
+	font-family: "Tahoma";
+	color: #283942;
+	border: 1px solid #b2bfc3;
+	
+	margin-top: 5px;
+	min-width: 150px;
+	min-height: 25px;
+	
+}
+QTabBar::tab:first
+{
+	font-size: 9pt;
+	font-family: "Tahoma";
+	color: #283942;
+	border: 1px solid #b2bfc3;
+	/*border-left: 0px solid white;
+	border-right: 1px solid #b2bfc3;
+	border-bottom: 1px solid #b2bfc3;*/
+	margin-top: 5px;
+	min-width: 150px;
+	min-height: 25px;
+	
+}
+QTabBar[singleType="true"]::tab:first
+{
+	font-size: 9pt;
+	font-family: "Tahoma";
+	color: #283942;
+	border: 1px solid #b2bfc3;
+	margin-top: 5px;
+	min-width: 150px;
+	min-height: 25px;
+}
+
+QTabBar::tab:!selected {
+	border-bottom: 1px solid #b2bfc3;
+	
+}
+
+QTabBar[singleType="true"]::tab:!selected {
+	border-bottom: 1px solid #b2bfc3;
+	
+}
+
+
+QTabBar::tab:selected {
+	background: white;
+	border-top: 1px solid #b2bfc3;
+	border-right: 1px solid #b2bfc3;
+	border-bottom: solid 0px;
+	
+}
+QTabBar[singleType="true"]::tab:selected {
+	background: white;
+	border: 1px solid #b2bfc3;
+	border-bottom: solid 0px;
+	
+}
+
+QTabBar::tab:first:selected {
+	background: white;
+	border: 1px solid #b2bfc3;
+	border-bottom: solid 0px;
+	
+}
+
+QTabBar[singleType="true"]::tab:first:selected {
+	background: white;
+	border: 1px solid #b2bfc3;
+	border-bottom: solid 0px;
+	
+}
+
+
+#groupBoxLinesPage
+{
+	border: 1px solid #b2bfc3;
+	background: rgb(240,240,240);
+	
+}
+
+#netconfigFrame
+{
+	border: 1px solid #b2bfc3;
+	background: rgb(240,240,240);
+	
+}
+
+#headerFrame
+{
+	padding-left: 4px;
+	padding-right: 4px;
+	
+}
+
+/*---------- labels of netconfig page ---------- */
+QLabel[networkLabels="true"]   
+{
+	font-size: 9pt;
+	font-family: "Tahoma";
+	color: #283942;
+}
+/*------------------------------------------------*/
+/* --------------  dhcp selector -----------------*/
+#dhcpSelector {
+    border: 1px solid #b2bfc3;
+    padding-top: 1px;
+	padding-left: 15px;
+	padding-bottom:1px;
+	font-size: 9pt;
+	font-family: "Tahoma";
+	color: #283942;
+}
+
+#dhcpSelector:editable {
+    background: white;
+	padding-left:5px;
+}
+
+/* shift the text when the popup opens */
+#dhcpSelector:on { 
+    
+}
+#dhcpSelector:!editable, #dhcpSelector::drop-down:editable {
+     background: white;
+}
+
+/* QComboBox gets the "on" state when the popup is open */
+#dhcpSelector:!editable:on, #dhcpSelector::drop-down:editable:on {
+    background: white;
+}
+#dhcpSelector::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 30px;
+	background: #29abe2;
+}
+
+#dhcpSelector::down-arrow {
+    image: url(:/images/Arrow-down.png);
+	width: 12px;
+	height: 12px;
+	/*subcontrol-origin: padding;
+	subcontrol-position: left top;*/
+}
+/* shift the arrow when popup is open */
+#dhcpSelector::down-arrow:on { 
+    top: 1px;
+    left: 1px;
+}
+/*------------------------------------------------*/
+/*--------------- lines frame --------------------*/
+QGroupBox[lineFrame="true"]
+{
+	background: #b2bfc3;
+    border-radius: 4px;
+	height: 40px;
+}
+/*-----------------------------------------------------*/
+/*--------------------- lines comboboxes ---------------*/
+*[lineCombo="true"] {
+    border: 1px solid #b2bfc3;
+    margin-top: 3px;
+	margin-right: 3px;
+	margin-bottom: 3px;
+	padding-left:15px;
+	border-top-left-radius: 4px; /* same radius as the QComboBox */
+    border-bottom-left-radius: 4px;
+	height: 30px;
+	
+	font-size: 9pt;
+	font-family: "Tahoma";
+	color: #283942;
+}
+
+*[lineCombo="true"]:editable {
+    background: white;
+	/*padding-left:15px;*/
+	
+}
+
+
+/* shift the text when the popup opens */
+*[lineCombo="true"]:on { 
+    /*padding-top: 0px;*/
+   /* padding-left: 10px;*/
+}
+*[lineCombo="true"]:!editable, *[lineCombo="true"]::drop-down:editable {
+     background: white;
+	 padding-left: 10px;
+}
+
+/* QComboBox gets the "on" state when the popup is open */
+*[lineCombo="true"]:!editable:on, *[lineCombo="true"]::drop-down:editable:on {
+    background: white;
+	padding-left: 10px;
+}
+*[lineCombo="true"]::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 30px;
+	background: #29abe2;
+}
+
+
+*[lineCombo="true"]::down-arrow {
+    image: url(:/images/Arrow-down.png);
+	width: 12px;
+	height: 12px;
+}
+/* shift the arrow when popup is open */
+*[lineCombo="true"]::down-arrow:on { 
+    top: 1px;
+    left: 1px;
+}
+*[lineCombo="true"]:!editable:disabled, *[lineCombo="true"]::drop-down:editable:disabled {
+     background: #b2bfc3;
+	 text-align: center;
+}
+*[lineCombo="true"]:disabled
+{
+	
+	text-align: center;
+}
+
+*[lineCombo="true"]:editable:disabled
+{
+	background:#b2bfc3;
+	margin-top: 3px;
+	
+	margin-bottom:3px;
+	text-align: center;
+	height: 30px;
+	font-size: 9pt;
+	font-family: "Tahoma";
+	color: #283942;
+}
+
+*[lineCombo="true"]::drop-down:disabled {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 30px;
+	background: #b2bfc3;
+}
+
 
 

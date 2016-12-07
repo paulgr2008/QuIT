@@ -22,9 +22,9 @@
     <haux></haux>
     <temp></temp>
     <fspeed></fspeed>
-    <vam></vam>
     <filt></filt>
     <swing></swing>
+	<eco></eco>
     <ls></ls>
     <ls2></ls2>
     <query></query>
@@ -32,23 +32,12 @@
     <lock></lock>
     <main></main>
     <wh></wh>
-    <CA></CA>
-    <group></group>
-    <props></props>
-    <va></va>
-    <knx></knx>
-    <link></link>
-    <hdl></hdl>
-    <luxom></luxom>
+	<iset></iset>
     <boot></boot>
+	<nvdb></nvdb>
+	<stat></stat>
     <line>
 		<type>
 		</type>
     </line>
-    <modbus></modbus>
-    <sddp></sddp>
-    <simul></simul>
-    <gpio></gpio>
-    <info></info>
-    <nplug></nplug>
 </root>
