@@ -13,6 +13,7 @@ ClickableLabel::~ClickableLabel()
 
 void ClickableLabel::mousePressEvent(QMouseEvent* event)
 {
+    Q_UNUSED(event);
     emit clicked();
 }
 

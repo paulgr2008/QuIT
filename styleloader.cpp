@@ -38,7 +38,7 @@ void StyleLoader::setAppStyleSheet()
 
 QString StyleLoader::defaultStyleFile()
 {
-    return QApplication::applicationDirPath() + "/style.qss";
+    return QApplication::applicationDirPath() + "/styles.css";
 }
 
 StyleLoader::StyleLoader( QObject *parent, const QString& filename, const QKeySequence &key ):

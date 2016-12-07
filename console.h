@@ -39,6 +39,7 @@
 #include <QtGui>
 #include <QCompleter>
 #include "treemodelcompleter.h"
+#include "myhighlighter.h"
 
 QT_BEGIN_NAMESPACE
 class TreeModelCompleter;
@@ -50,23 +51,27 @@ class Console : public QPlainTextEdit
     Q_OBJECT
 
 signals:
-    void getDataFromConsole(const QByteArray &data);
+    void getDataFromConsole(const QByteArray &data,bool r);
+    void consoleClose();
 
 public:
     explicit Console(QWidget *parent = 0);
     ~Console();
     void setCompleter(TreeModelCompleter* completer);
     TreeModelCompleter* completer() const;
-
     void putData(const QByteArray &data);
-
+    void insertPrompt(bool insertNewBlock = true);
     void setLocalEchoEnabled(bool set);
+    void insertWarningText(const QString str );
+
 
 protected:
     virtual void keyPressEvent(QKeyEvent *e);
     virtual void mousePressEvent(QMouseEvent *e);
+  //  virtual void mouseReleaseEvent(QMouseEvent *e);
     virtual void mouseDoubleClickEvent(QMouseEvent *e);
     virtual void contextMenuEvent(QContextMenuEvent *e);
+    void mouseMoveEvent(QMouseEvent* e);
     void focusInEvent(QFocusEvent *e);
 private slots:
     void insertCompletion(QString completion);
@@ -76,14 +81,13 @@ private:
     void historyAdd(QString);
     void historyBack();
     void historyForward();
-    void insertPrompt(bool insertNewBlock = true);
     void scrollDown();
     void onEnter();
-    //void completerHandler(QKeyEvent* e);
+    void highlightWord(QTextCursor cursor);
+    void highlightLine(QTextCursor cursor);
 
     //void completionHighlighted(QString str);
     QString textUnderCursor() const;
-
     QString prompt;
     bool localEchoEnabled;
     int historyPos;
@@ -92,8 +96,17 @@ private:
     QStringList commandList;
     TreeModelCompleter* comp;
     QByteArray data;
-    QString out;
+    QString word;
+    bool isDoubleClick;
+    bool isClickSelected;
+    bool isSelection;
+    bool autocompleteOn;
+    int pos;
     QString cmd;
+    MyHighlighter* highlighter;
+    QTextEdit::ExtraSelection currentWord;
+    int countClick;
+
 
 };
 

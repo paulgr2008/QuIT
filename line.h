@@ -991,7 +991,7 @@ EXTERN const line_type_descr_t line_types[]
     * LINE_FUNC enum match line_types index for backward compatibility
     */
     {   /* LINE_FUNC_UNUSED */
-        "Unused",       'U',        LINE_AC_TYPE_UNUSED,        "Unused", 
+        "Unused",       'U',        LINE_AC_TYPE_UNUSED,        "Unused",
         CM5_L_EN_ALL|CLNET_L_EN_ALL|COOLPLUG_L_EN_ALL,
         NULL,                                                   0
     },

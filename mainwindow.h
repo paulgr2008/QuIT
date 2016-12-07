@@ -7,20 +7,12 @@
 #include <QtWidgets>
 #include <QSemaphore>
 #include "ipwidget.h"
+#include "netconfigtab.h"
+#include "linestab.h"
+#include "warningwidget.h"
+#include "headerwidget.h"
+#include "globalvars.h"
 
-#define N_LINES    8
-
-/* switches */
-#define SW_DK     10
-#define SW_ME      0
-#define SW_TO      5
-#define SW_SA      5
-#define SW_UNUSED  0
-
-/* CA types */
-
-const int nHVACLines[]={8,5,5,4};
-enum DevType {COOLMASTER, COOLINK,COOLINKHUB,COOLPLUG,COOLPLUGADMIN} ;
 
 
 QT_BEGIN_NAMESPACE
@@ -30,6 +22,10 @@ class ConsoleController;
 class ConsoleView;
 class IPWidget;
 class ClickableLabel;
+class NetConfigTab;
+class LinesTab;
+class ConsoleDialog;
+class InfoWidget;
 
 namespace Ui {
 class MainWindow;
@@ -47,79 +43,91 @@ public:
     bool initializeDeviceNotification(void);
 
 private slots:
-    void tabOperating(int index);
-    void checkCustomPortName(QAction* action);
-    void handleSerialPort();
-    void handleError(QSerialPort::SerialPortError error);
-    void sendData(const QString &command) ;
-    QString getData() ;
-    int dataHandler(const QString &command);
 
-    void about();
-    void createCommandLine();
+    void checkCustomPortName(QAction* action);
     void setCustomBaudRate(QAction* action);
-    void handleNetconfigPage(QString);
-    void IPSettingsHandler(bool);
+    void openSysMsgTimeGate();
     void deviceConnected();
     void deviceDisconnected();
-    void openSysMsgTimeGate();
-    void handleLines(QString str);
+    void handleSerialPort();
+    void sendData(const QString &command) ;
+    int dataHandler(const QString &command);
+    void about();
     bool getInitInformation();
-    void on_rebootBtn_clicked();
-    void closeConsoleView();
+    QString getData() ;
+    void handleError(QSerialPort::SerialPortError error);
     void getPageInformation();
+    void createCommandLine();
+    void rebootBtnClicked();
+    void tabOperating(int index);
+    void closeConsoleView();
     void runConsoleView();
+    void openTerminal();
+    bool findPortAfterReboot();
+    void closeSession();
+    void connectButtonClicked();
+    void rebootBegin();
+    void logHotKeyPressed();
+    void applyButtonEnable(bool);
+    void setTerminalMode();
+    void closeTerminalMode();
+    QByteArray readDataNonVCOM();
+    void writeDataNonVCom(QByteArray arr);
 
 protected:
- bool eventFilter( QObject *target, QEvent *event );
+   // bool eventFilter( QObject *target, QEvent *event );
 
 signals:
-     void processConnect() ;
-     void nameSerialPortChanged(QString portName) ;
-     void connectionSuccess();
-     void signal_DeviceConnected();
-     void signal_DeviceDisconnected();
-     void releaseLoop();
+    void processConnect() ;
+    void nameSerialPortChanged(QString portName) ;
+    void connectionSuccess();
+    void signal_DeviceConnected();
+    void signal_DevConnToConsole();
+    void signal_DeviceDisconnected();
+    void signal_DevDisconnToConsole();
+    void releaseLoop();
+    void rebootEnd();
+    void sendDataNonVCom(QByteArray);
 
 private:
     void showStatusMessage(const QString &message, int time);
     void initGUIConnections();
-    void openSerialPort();
+    void initGeneralGUIConnections();
+    bool openSerialPort();
     void closeSerialPort();
     void selectPortName();
+    bool isPortAvailable(const QString &portName);
 
     void getDeviceInfo( QString version );
     void setupModel();
     void changeDeviceProperty(QStringList list);
     void setupConnectMenu();
     void fillCommandBuffer();
-    void fillLinesForm(QList<QStringList> rows );
     void fillSettings(QList<QStringList> rows );
-    void fillNetworkConfigForm(QList<QStringList> rows );
     void setRatesMenu();
-    void setPortsMenu();
-    void closeSession();
+    void enumPorts();
+
     void timeGateHandler();
-    void createLinesView();
-    void setLinesInitialState();
-    void defineStyles();
     void openSession();
-    void manageGlobalElements();
-    void comboBoxFilter();
-    void sortItems();
-    void createDipSwitches();
-    void resetSwitches();
-    void switchOn(const QString row, int column, bool bit);
-    void setTitle();
-    void setConnectButton();
-    int execWarningWindow(QString warning);
     bool checkDeviceInitialState();
     void switchesHandler(const QString row, int code);
     bool rebootProcessing();
-    void handlingLostConnection(QString w);
+    void handlingUnavailableState();
 
-
-
+    void setTitle();
+    void setConnectButton();
+    void showWarning(int warningType);
+    void setLabelConnectedPort();
+    void setConnectButtonIcon(QString path,Qt::LayoutDirection direction);
+    void setConfigsGUI();
+    void connectBtnNonCom();
+    void insertConfigGUIToPage();
+    void deleteWelcomePageElements();
+    void setCustomedFont();
+    void setConsoleGUI();
+    bool rebootProcessingNonVCOM();
+    void getInfoAboutInstalledSerialPorts(QSerialPortInfo info);
+    void setConnectButtonToStartPosition();
     bool nativeEvent(const QByteArray& eventType, void* message, long* result);
 
     Ui::MainWindow *ui;
@@ -127,54 +135,33 @@ private:
     HDEVNOTIFY m_hDeviceNotify;
 
     QString portName;
+    QString prevPortName;
     QString deviceName;
     qint32 baudRate;
     QString stringBaudRate;
     QSerialPort *serial;
     QLabel *status;
     QLabel* ports;
-    QSignalMapper* signalMapper;
-    QSignalMapper* netconfigMapper;
     QStringList commandsToDevice;
     QString currentCommand;
     QString strBuffer;
     QByteArray readData;
     QMap<QString,QString> commandBuffer;
     QMap<QString,QString> properties;
-    QMap<QString, IPWidget*> ipWidgetMap;
-
-
-
-    QStringList devTypeStrings; 
-
-    QRegExp rx;
-    QRegExpValidator *validator;
-    QList<QStandardItem*> itemsList;
-    QStandardItemModel *model;
-    QStandardItemModel* linesModel;
-
-    QList<IPWidget*> ipWidgetsList;
-    QStandardItemModel *modelIP;
-    QDataWidgetMapper *mapperIP;
+    QStringList devTypeStrings;
 
     QGridLayout* centralLayout;
     QGridLayout *mainLayout;
-    QDataWidgetMapper *mapper;
     QMenu* portsMenu;
     QMenu* ratesMenu;
     QAction* connectAction;
-    QAction* getHVACInfo;
     QSize* size;
     QSettings* settings;
     QList<QSerialPortInfo> portsList;
-    QList<QComboBox*> lineCombosList;
-    QList<QLabel*> lineLabelList;
-    QList<QGroupBox*> lineFrameBoxesList;
-    QList<QLabel*> switchesList;
-    QStringList selectedDevices;
+
     QStringList pagesList;
+    QStringList warningStrings;
     QPixmap devicePict;
-    QMessageBox* msgBox;
     QEventLoop loop;
     QTimer timer;
     int portsCount;
@@ -182,41 +169,48 @@ private:
     bool isSessionBegin;
     bool sysMsgTimeGate;
     bool isSendingSuccess;
+    bool isConnection;
+    bool isConnectionProcessRun;
+    bool isReboot;
+    bool isDisconnect;
+    bool isTerminalModeSwitchOn;
+    bool isConsoleSwitchOn;
     int devType;
     int numbHVAC;
-    int usedLines;
-    int usedGree;
     int timeoutRead;
     int echo;
+    bool _isVCOM;
+    bool isVCOM;
 
 
 
     ConsoleView* consoleView;
     ConsoleController* consoleController;
     QPushButton *connectBtn;
+    QFrame* connectGroup;
+    WarningWidget* warning;
     QWidget* centralWindow;
     QLabel* labelConnectedPort;
+    //
     QLabel* HVACPorts;
     QLabel* numberOfHVACPort;
-    //IPWidget* ipWidget;
+    //
+    QLabel* labelDeviceVersion;
+    QLabel* autocompleteLabel;
+    QPushButton* cleanButton ;
+    QCheckBox* autocompleter ;
+    QPushButton* applyButton;
+    QPushButton* rebootBtn;
 
-    /* styles strings*/
-    QString styleLineFrameUsed;
-    QString styleLineFrameDisabled;
-    QString switchOnStyle;
-    QString switchOffStyle;
-    QString switchBeginStyle;
-    QString dotLabelStySheet;
-    QString connectButtonStyle;
-    QString connectButtonStyleHover;
-    QString connectButtonStylePressed;
-    QString connectedLabel;
-    QString connectButtonStyleError;
-    QString connectButtonStyleDisabled;
-
-    /* lines layouts */
-    QLayout* layoutMainHVAC;
-    QHBoxLayout* layoutMainPage;
+    QGroupBox* headerFrame;
+    QHBoxLayout* connectBtnLayout;
+    QHBoxLayout* footerLayout;
+    QTabWidget* tabWidget;
+    QGridLayout* configPageLayout;
+    NetConfigTab* netConfigTab;
+    LinesTab* linesTab;
+    HeaderWidget* headerWidget;
+    InfoWidget* infoWidget;
 
 
 

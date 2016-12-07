@@ -25,7 +25,8 @@ QString TreeModelCompleter::separator() const
 
 QStringList TreeModelCompleter::splitPath( const QString &path ) const
 {
-    if ( sep.isNull() ) {
+    if ( sep.isNull() )
+    {
         return QCompleter::splitPath(path);
     }
 
@@ -34,13 +35,15 @@ QStringList TreeModelCompleter::splitPath( const QString &path ) const
 
 QString TreeModelCompleter::pathFromIndex( const QModelIndex &index ) const
 {
-    if ( sep.isNull() ) {
+    if ( sep.isNull() )
+    {
         return QCompleter::pathFromIndex(index);
     }
 
     // navigate up and accumulate data
     QStringList dataList;
-    for ( QModelIndex i = index; i.isValid(); i = i.parent() ) {
+    for ( QModelIndex i = index; i.isValid(); i = i.parent() )
+    {
         dataList.prepend( model()->data(i, completionRole()).toString() );
     }
 

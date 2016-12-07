@@ -1,0 +1,54 @@
+<root>
+    <set>
+        <echo>
+            <item att="0"></item>
+            <item att="1"></item>
+        </echo>
+        <deg>
+            <item att="C"></item>
+            <item att="F"></item>
+        </deg>
+    </set>
+    <help></help>
+    <allon></allon>
+    <alloff></alloff>
+    <on></on>
+    <off></off>
+    <cool></cool>
+    <heat></heat>
+    <fan></fan>
+    <dry></dry>
+    <auto></auto>
+    <haux></haux>
+    <temp></temp>
+    <fspeed></fspeed>
+    <vam></vam>
+    <filt></filt>
+    <swing></swing>
+    <ls></ls>
+    <ls2></ls2>
+    <query></query>
+    <feed></feed>
+    <lock></lock>
+    <main></main>
+    <wh></wh>
+    <CA></CA>
+    <group></group>
+    <props></props>
+    <va></va>
+    <knx></knx>
+    <link></link>
+    <hdl></hdl>
+    <luxom></luxom>
+    <boot></boot>
+    <line>
+		<type>
+		</type>
+    </line>
+    <modbus></modbus>
+    <sddp></sddp>
+    <simul></simul>
+    <gpio></gpio>
+    <info></info>
+    <nplug></nplug>
+</root>
