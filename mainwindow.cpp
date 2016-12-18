@@ -16,7 +16,7 @@
 #include "logbrowser.h"
 
 #define NAMEAPP "Quick Installation Tool"
-#define VERSION " v1.0.1"
+#define VERSION " v1.0.3"
 #define N_INFO_TABS 2
 
 DEFINE_GUID( GUID_DEVINTERFACE_USBDEVICE,0x4D36E978L, 0xE325,
@@ -59,6 +59,7 @@ MainWindow::MainWindow( QWidget *parent ):QMainWindow( parent ),
 
     warning = new WarningWidget;
     connect(warning,SIGNAL(buttonClicked()),this,SLOT(closeSession()));
+    connect(warning,SIGNAL(terminalButtonClicked()),this , SLOT(onTerminalButtonClicked()));
 
     _isVCOM = true;
     isConnection = false;
@@ -73,7 +74,7 @@ MainWindow::MainWindow( QWidget *parent ):QMainWindow( parent ),
     warningStrings<<"No Way To Connect"<<"Connection Lost"
                   <<"Port Unavailable"<<"Device Unavailable"<<"Open Error"
                   <<"Switches: Incorrect State"<<"Resource Error"<<"Reboot Requied"
-                  <<"Reading Error"<<"No Data In Port";
+                  <<"Reading Error"<<"No Data In Port"<<"Indefinite Device Type";
 
     devType = -1;
     centralWindow = ui->centralWidget;
@@ -125,7 +126,6 @@ MainWindow::MainWindow( QWidget *parent ):QMainWindow( parent ),
     initGeneralGUIConnections();
 
     /* create trace window */
-
     logBrowser = new LogBrowser(this);
     isLogBrowserRunning = false;
     QShortcut *logHotKey = new QShortcut(this);
@@ -235,7 +235,7 @@ void MainWindow::connectButtonClicked()
         setConnectButtonIcon(tr(":/images/Arrow-right.png"),Qt::LeftToRight);
 
         timer.start() ;
-        while( timer.elapsed() < 100 )
+        while( timer.elapsed() < 200 )
             qApp->processEvents(0);
 
         isConnectionProcessRun = openSerialPort();
@@ -261,7 +261,6 @@ void MainWindow::handleError( QSerialPort::SerialPortError error )
         if((serial->errorString().contains("Access is denied")))
                 return;
 
-        qDebug()<<isReboot;
         if( isReboot )
             return;
         isDisconnect = true;
@@ -284,9 +283,14 @@ void MainWindow::showWarning(int type)
 {
     switch( type )
     {
+    case INDEF_DEV_TYPE:
+        warning->terminalButton->setText(" Run terminal ");
+        warning->terminalButton->show();
+        warning->warningButton->hide();
+        break;
     case SESSION_CONNECTION_LOST:
         warning->warningButton->setText(" Disconnect ");
-        warning->quitButton->hide();
+        warning->terminalButton->hide();
         warning->warningButton->show();
         break;
     case DEVICE_UNAVAILABLE:
@@ -295,11 +299,11 @@ void MainWindow::showWarning(int type)
     case SWITCHES_INCORRECT_STATE:
     case REBOOT_REQUIRED:
     case RESOURCE_ERROR:
-        warning->quitButton->hide();
+        warning->terminalButton->hide();
         warning->warningButton->hide();
         break;
     case USB_NOT_CONNECTED:
-        warning->quitButton->hide();
+        warning->terminalButton->hide();
         warning->warningButton->hide();
         break;
     default:
@@ -336,10 +340,8 @@ void MainWindow::handlingUnavailableState()
      ratesMenu = ui->menuConnect_2->addMenu( tr( "Baud &Rate" ) );
      connectAction = new QAction( tr( "&Connect" ), this );
      ui->menuConnect_2->addAction( connectAction );
-     //connectAction->setEnabled(true);
      enumPorts();
      setRatesMenu();
-
  }
 
  /*
@@ -439,7 +441,6 @@ void MainWindow::handlingUnavailableState()
             default:
                 action->setIcon(QPixmap(":/images/usb.png"));
                 break;
-
             }
 
             action->setIconVisibleInMenu(true);
@@ -518,19 +519,14 @@ void MainWindow::handlingUnavailableState()
  */
  void MainWindow::checkCustomPortName( QAction* action )
  {
-     //enumPorts();
-
      QList<QAction*> actionsList = portsMenu->actions();
-
      foreach( QAction* act, actionsList )
-     {
-         act->setChecked(false);
-     }
+        act->setChecked(false);
 
      action->setChecked(true);
      portName = action->text();
 
-     if( (action->property("vid")).toInt()==VENDOR_ID)
+     if( (action->property("vid")).toInt()==VENDOR_ID )
         _isVCOM = true;
      else _isVCOM = false;
 
@@ -586,9 +582,7 @@ bool MainWindow::nativeEvent( const QByteArray& eventType, void* message,
             str = QString::fromWCharArray( pDevInf->dbcc_name).remove(0,7);
             qDebug()<<str<<" device connected";
             deviceConnected();
-
             break;
-
         case DBT_DEVICEREMOVECOMPLETE:
             str = QString::fromWCharArray( pDevInf->dbcc_name).remove(0,7);
             qDebug()<<str<<" device disconnected";
@@ -611,8 +605,6 @@ void MainWindow::deviceConnected()
         if( isPortAvailable(prevPortName) )
         {
             portName = prevPortName;
-
-
             if (openSerialPort())
             {
                 isDisconnect = false;
@@ -626,7 +618,6 @@ void MainWindow::deviceConnected()
                     headerWidget->updateButton->setEnabled(true);
                 return;
             }
-            //isDisconnect = false;
         }
         else
         {
@@ -645,7 +636,6 @@ void MainWindow::deviceDisconnected()
     {
         if( serial->isOpen() )
             closeSerialPort();
-        qDebug()<<serial->isOpen();
     }
     enumPorts();
 }
@@ -671,7 +661,6 @@ void MainWindow::openSysMsgTimeGate()
 bool MainWindow::isPortAvailable(const QString &port)
 {
     QList<QAction*> actionList = portsMenu->actions();
-
     foreach(QAction* action, actionList)
     {
         if( !port.compare(action->text()) )
@@ -747,11 +736,8 @@ bool MainWindow::openSerialPort()
             setConnectButtonToStartPosition();
             return false;
         }
-
         isSessionBegin = true;
-
-        openSession();
-        return true;
+        return openSession();
     }
     else
     {
@@ -768,7 +754,6 @@ void MainWindow::setConnectButtonToStartPosition()
     connectBtn->setProperty("connectionStart", false);
     connectBtn->setText("Connect");
     setConnectButtonIcon(tr(":/images/Arrow-right.png"),Qt::RightToLeft);
-
 }
 
 /*
@@ -787,7 +772,6 @@ void MainWindow::initGUIConnections()
 void MainWindow::setConfigsGUI()
 {
     applyButton = new QPushButton;
-
     netConfigTab = new NetConfigTab(&commandBuffer);
     netConfigTab->setProperty("rightConfigTab",true);
     linesTab = new LinesTab(&commandBuffer,  devType, numbHVAC);
@@ -849,7 +833,6 @@ void MainWindow::deleteWelcomePageElements()
 */
 void MainWindow::tabOperating( int index )
 {
-
     switch(index)
     {
         case 1:
@@ -909,7 +892,6 @@ int MainWindow::dataHandler( const QString &command )
     int i;
     QString buffer;
     QList<QStringList> rows ;
-
     sendData( command+"\r\n" );
     buffer = getData();
     qDebug()<<"buffer: "<<buffer;
@@ -985,7 +967,8 @@ int MainWindow::dataHandler( const QString &command )
             fillSettings( rows );
         else if ( command.contains( "line" ) )
         {
-            linesTab->fillLinesForm( rows );
+            if( devType!=INDEF_DEV )
+                linesTab->fillLinesForm( rows );
         }
     }
     return 1;
@@ -1017,6 +1000,9 @@ void MainWindow::getDeviceInfo( QString version )
         devType = COOLPLUG;
     else if ( version.contains(QRegExp("^02C0")) )
         devType = COOLINK;
+    else {
+        devType = INDEF_DEV;
+    }
     //deviceVersion->setText( version );
 }
 
@@ -1032,8 +1018,18 @@ void MainWindow::closeSerialPort()
 /*
  * Open session
  */
-void MainWindow::openSession()
+bool MainWindow::openSession()
 {
+    if(devType==INDEF_DEV)
+    {
+        showWarning(INDEF_DEV_TYPE);
+        setConnectButtonToStartPosition();
+        closeSerialPort();
+        isSessionBegin = false;
+        isDisconnect = false;
+        return false;
+    }
+
     deleteWelcomePageElements();
 
     tabWidget = new QTabWidget;
@@ -1043,6 +1039,7 @@ void MainWindow::openSession()
 
     switch(devType)
     {
+
     case COOLPLUG:
         tabWidget->tabBar()->setProperty("singleType",true);
         setConsoleGUI();
@@ -1055,8 +1052,8 @@ void MainWindow::openSession()
         setConsoleGUI();
         break;
     }
-   //
     this->setFixedSize(650,400);
+    return true;
 }
 
 void MainWindow::openTerminal()
@@ -1065,16 +1062,26 @@ void MainWindow::openTerminal()
     consoleView->runConsole();
     consoleView->setConsoleSignalConnections(true);
     consoleView->runInTerminalMode();
+    connectAction->setText("Disconnect");
     connect(this,SIGNAL(rebootEnd()),consoleView->getConsoleController(),SLOT(onRebootEnd()));
     connect(consoleView->getConsoleController(),SIGNAL(rebootSignal()),this,SLOT(findPortAfterReboot()));
     connect(consoleView->getConsoleController(),SIGNAL(rebootBeginSignal()),this,SLOT(rebootBegin()),Qt::DirectConnection);
     connect (this,SIGNAL(signal_DevDisconnToConsole()),consoleView->getConsoleController(),SLOT(deviceDisconnected()));
     connect (this, SIGNAL(signal_DevConnToConsole()),consoleView->getConsoleController(),SLOT(deviceConnected()));
     connect(consoleView, SIGNAL(terminalModeClose()),this,SLOT(closeTerminalMode()));
-    connectBtn->setText("Connect");
+
     isConnection = true;
     isConnectionProcessRun = false;
 }
+
+void MainWindow::onTerminalButtonClicked()
+{
+    warning->hide();
+
+    setTerminalMode();
+    openSerialPort();
+}
+
 
 void MainWindow::closeTerminalMode()
 {
@@ -1083,7 +1090,12 @@ void MainWindow::closeTerminalMode()
     setWindowOpacity(1.0);
     if(serial->isOpen())
         serial->close();
-    //isTerminalModeSwitchOn = false;
+    isSessionBegin = false;
+    isConnectionProcessRun=false;
+    isDisconnect = false;
+    connectBtn->setText("Connect");
+    connectAction->setText("Connect");
+    isTerminalModeSwitchOn = false;
     enumPorts();
 }
 
@@ -1123,12 +1135,12 @@ QString MainWindow::getData()
     if ( serial->error() == QSerialPort::ReadError )
     {
         showWarning(READING_ERROR);
-        /*trace->addText(QString("Failed to read from port %1, error: %2")
+        /*qDebug()<<(QString("Failed to read from port %1, error: %2")
                        .arg(serial->portName()).arg(serial->errorString() ));*/
     }
     else if ( serial->error()==QSerialPort::TimeoutError && readData.isEmpty() )
         showWarning(NO_DATA_IN_PORT);
-        /*trace->addText( QString("No data was currently available for reading from port %1")
+        /*qDebug()<<( QString("No data was currently available for reading from port %1")
                            .arg(serial->portName()) );*/
     return QString( readData );
 }
@@ -1196,11 +1208,11 @@ void MainWindow::applyButtonEnable(bool b)
  */
 void MainWindow::rebootBtnClicked()
 {
-   isReboot = true;
-   headerWidget->handleLabelConnected(REBOOTING);
-   headerWidget->updateButton->setEnabled(false);
-   rebootBtn->setEnabled(false);
-   rebootBtn->clearFocus();
+    isReboot = true;
+    headerWidget->handleLabelConnected(REBOOTING);
+    headerWidget->updateButton->setEnabled(false);
+    rebootBtn->setEnabled(false);
+    rebootBtn->clearFocus();
 
     if ( !rebootProcessing() )
     {
@@ -1208,7 +1220,6 @@ void MainWindow::rebootBtnClicked()
         return;
     }
     headerWidget->updateButton->setEnabled(true);
-
     headerWidget->handleLabelConnected(CONNECTED );
 }
 
@@ -1218,47 +1229,9 @@ bool MainWindow::rebootProcessing()
         warning->hide();
     rebootBegin();
     sendData("boot 2\r\n");
-/*
-    if( !isVCOM )
-        return rebootProcessingNonVCOM();*/
-
     serial->waitForBytesWritten(10)?qDebug()<<"data is written":qDebug()<<"timeout";
     serial->close();
     return findPortAfterReboot();
-}
-
-bool MainWindow::rebootProcessingNonVCOM()
-{
-
-QTime timer;
-
-    timer.start() ;
-    while( timer.elapsed() < 1000 )
-        qDebug()<<QString( readDataNonVCOM());
-            //qApp->processEvents(0);
-    /*QByteArray arr = serial->readAll();
-    qDebug()<<QString(arr);
-    timer.restart() ;
-    while(timer.elapsed() < 10000)
-    {
-        QString str = QString(getData());
-        qDebug()<<str;
-
-        if(str.contains("build:",Qt::CaseInsensitive))
-            return false;
-    }*/
-    return true;
-}
-
-QByteArray MainWindow::readDataNonVCOM()
-{
-
-    return serial->readAll();
-}
-
-void MainWindow::writeDataNonVCom(QByteArray arr)
-{
-    serial->write(arr);
 }
 
 bool MainWindow::findPortAfterReboot()
@@ -1281,8 +1254,6 @@ bool MainWindow::findPortAfterReboot()
             {
                 portName = _portName;
                 openSerialPort();
-
-
                 if (isTerminalModeSwitchOn)
                 {
                     consoleView->setConsoleSignalConnections(true);
@@ -1352,7 +1323,6 @@ void MainWindow::runConsoleView()
 void MainWindow::closeConsoleView()
 {
     consoleView->setConsoleSignalConnections(false);
-    //disconnect(this,SIGNAL(rebootEnd()),consoleView->getConsoleController(),SLOT(readData()));
     disconnect(consoleView->getConsoleController(),SIGNAL(rebootSignal()),this,SLOT(findPortAfterReboot()));
     disconnect(consoleView->getConsoleController(),SIGNAL(rebootBeginSignal()),this,SLOT(rebootBegin()));
     disconnect (this,SIGNAL(signal_DevDisconnToConsole()),consoleView->getConsoleController(),SLOT(deviceDisconnected()));
@@ -1399,7 +1369,6 @@ void MainWindow::about()
                        tr( "The <b>CoolAutomation Tool</b> is a tool "
                           "for handling CoolAutomation devices." ) );
 }
-
 
 MainWindow::~MainWindow()
 {

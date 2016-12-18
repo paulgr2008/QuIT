@@ -68,8 +68,7 @@ FORMS    += mainwindow.ui \
     consolefooter.ui
 CONFIG -= embed_manifest_exe
 RC_FILE += ico.rc
-RESOURCES += \
-    res.qrc
+RESOURCES += res.qrc
 QMAKE_CXXFLAGS += -std=gnu++11
 DISTFILES += \
     xmlfile.txt \
@@ -80,5 +79,4 @@ DISTFILES += \
     fonts/Linotype - Neue Haas Unica Pro.otf \
     images/port-icon.png
 
-#MAKE_POST_LINK = "./../CATools/inst/mt.exe -manifest ./../CATools/inst/QuickInstall.exe.manifest -outputresource:C:/XOL/CATools/inst/release/QuickInstall.exe"
 

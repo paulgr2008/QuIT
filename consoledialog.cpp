@@ -10,7 +10,7 @@ ConsoleDialog::ConsoleDialog(Console* _console, ConsoleFooter* _footer, QWidget 
     setGeometry(parent->geometry());
     setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Preferred);
     //setWindowFlags(Qt::SplashScreen);
-    resize(650,700);
+    resize(650,600);
     setModal(true);
     layout = new QVBoxLayout;
     layout->addWidget(console);

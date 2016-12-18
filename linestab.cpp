@@ -9,6 +9,7 @@
 #define SW_P_ON_2           4
 #define SW_ME               0
 #define SW_TO               5
+#define SW_HT               5
 #define SW_SA               5
 #define SW_UNUSED           0
 #define SW_P_4_0            14
@@ -409,6 +410,9 @@ void LinesTab::createDipSwitches()
     case LINE_AC_TYPE_SA:
         code[Q_ROW] = SW_SA;
         break;
+    case LINE_AC_TYPE_HT:
+        code[Q_ROW] = SW_HT;
+        break;
     default:
         code[Q_ROW] = SW_UNUSED;
         break;
@@ -432,6 +436,9 @@ void LinesTab::createDipSwitches()
             break;
         case LINE_AC_TYPE_SA:
             code[R_ROW] = SW_SA;
+            break;
+        case LINE_AC_TYPE_HT:
+            code[R_ROW] = SW_HT;
             break;
         default:
             code[R_ROW] = SW_UNUSED;

@@ -62,19 +62,22 @@ void Console::putData( const QByteArray &d )
 {
     QString str (d);
 
-    while ( str.contains(cmd) )
+    if (!cmd.isEmpty())
     {
-        str.remove(cmd);
+        while ( str.contains(cmd) )
+        {
+            str.remove(cmd);
+        }
+        qDebug()<<str;
+
+        if (str.contains("\r\n>\r\n"))
+            str.remove(str.indexOf("\r\n>"),3);
+        if (str.contains(">>"))
+            str.remove(str.indexOf(">"),1);
+
+        insertPlainText( str );
+        scrollDown();
     }
-    qDebug()<<str;
-
-    if (str.contains("\r\n>\r\n"))
-       str.remove(str.indexOf("\r\n>"),3);
-    if (str.contains(">>"))
-        str.remove(str.indexOf(">"),1);
-
-    insertPlainText( str );
-    scrollDown();
 }
 
 void Console::setLocalEchoEnabled( bool set )

@@ -12,10 +12,11 @@ WarningWidget::WarningWidget(QWidget *parent) :
     warningBox->installEventFilter(this);
     warningButton = ui->noButton;
     warningButton->setProperty("warning",true);
-    quitButton = ui->quitButton;
-    quitButton->setToolTip("Close warning");
-    quitButton->setProperty("warning",true);
+    terminalButton = ui->quitButton;
+    terminalButton->setToolTip("Launch terminal mode");
+    terminalButton->setProperty("warning",true);
     connect(warningButton, SIGNAL(clicked()), this, SIGNAL(buttonClicked()));
+    connect(terminalButton,SIGNAL(clicked()),this,SIGNAL(terminalButtonClicked()));
 }
 
 bool WarningWidget:: eventFilter(QObject *target, QEvent *event)

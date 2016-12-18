@@ -37,7 +37,7 @@ void ConsoleController::deviceConnected()
     {
         onRebootEnd();
     }
-    console->setReadOnly(false);
+    //console->setReadOnly(false);
 }
 
 void ConsoleController::deviceDisconnected()
@@ -45,14 +45,14 @@ void ConsoleController::deviceDisconnected()
     if (!isReboot)
     {
         console->insertWarningText("Disconnected");
-        console->setReadOnly(true);
+        //console->setReadOnly(true);
     }
 }
 
 void ConsoleController::onRebootEnd()
 {
     isReboot = false;
-    console->setReadOnly(false);
+    //console->setReadOnly(false);
     console->insertWarningText("");
 
 }
@@ -73,7 +73,7 @@ void ConsoleController::writeData( const QByteArray &data,bool r )
             return;
         }
 
-        console->setReadOnly(true);
+        //console->setReadOnly(true);
         emit rebootBeginSignal();
         serial->waitForBytesWritten(10)?qDebug()<<"data is written":qDebug()<<"timeout";
 

@@ -71,8 +71,7 @@ private slots:
     void applyButtonEnable(bool);
     void setTerminalMode();
     void closeTerminalMode();
-    QByteArray readDataNonVCOM();
-    void writeDataNonVCom(QByteArray arr);
+    void onTerminalButtonClicked();
 
 protected:
    // bool eventFilter( QObject *target, QEvent *event );
@@ -108,7 +107,7 @@ private:
     void enumPorts();
 
     void timeGateHandler();
-    void openSession();
+    bool openSession();
     bool checkDeviceInitialState();
     void switchesHandler(const QString row, int code);
     bool rebootProcessing();
@@ -125,7 +124,6 @@ private:
     void deleteWelcomePageElements();
     void setCustomedFont();
     void setConsoleGUI();
-    bool rebootProcessingNonVCOM();
     void getInfoAboutInstalledSerialPorts(QSerialPortInfo info);
     void setConnectButtonToStartPosition();
     bool nativeEvent(const QByteArray& eventType, void* message, long* result);

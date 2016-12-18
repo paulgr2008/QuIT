@@ -7,6 +7,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsItem>
 #include <QGraphicsTextItem>
+#include <QGraphicsSimpleTextItem>
 
 class SwitchLabel : public QGraphicsScene
 {
@@ -22,7 +23,7 @@ private:
 
     QGraphicsEllipseItem* ellipse;
     QGraphicsLineItem* line;
-    QGraphicsTextItem* textItem;
+    QGraphicsSimpleTextItem* textItem;
 
 };
 

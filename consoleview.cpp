@@ -27,7 +27,7 @@ void ConsoleView::runConsole()
     isRunning = true;
 
     connect( footer->autocompleter,SIGNAL( stateChanged(int) ),
-        getConsoleController(), SLOT( setAutocomplete(int)) );
+                    getConsoleController(), SLOT( setAutocomplete(int)) );
     connect(footer->fullScreenButton,SIGNAL(clicked(bool)),this,SLOT(consoleFullScreen()));
     connect(footer->cleanButton,SIGNAL(clicked()),this,SLOT(clearConsole()));
     cController->getConsole()->setFocus();

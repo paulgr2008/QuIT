@@ -16,11 +16,12 @@ public:
     void setWarningText(QString strWarning);
 
     QPushButton* warningButton;
-    QPushButton* quitButton;
+    QPushButton* terminalButton;
     ~WarningWidget();
 
 signals:
     void buttonClicked();
+    void terminalButtonClicked();
 protected:
     bool eventFilter(QObject *, QEvent *);
 private:
