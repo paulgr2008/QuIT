@@ -1,0 +1,6 @@
+-----1.0.3-----
+- add Hitachi dip switches
+-----1.0.2-----
+- fix bugs with console
+-----1.0.1-----
+- initial version
