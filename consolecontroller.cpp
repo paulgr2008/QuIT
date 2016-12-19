@@ -21,7 +21,6 @@ ConsoleController::ConsoleController(QSerialPort* s, int e, int _devType, bool _
     completer->setCaseSensitivity( Qt::CaseInsensitive );
     completer->setWrapAround(true);
     completer->setCompletionMode( QCompleter::PopupCompletion );
-    setAutocomplete(Qt::Checked);
     console->setLocalEchoEnabled(e);
     console->setCompleter(completer);
 }

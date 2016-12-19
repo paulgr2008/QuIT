@@ -17,10 +17,9 @@ ConsoleFooter::ConsoleFooter(QWidget *parent) :
     fullScreenButton->setProperty("configButton", true);
     fullScreenButton->setText("Terminal Mode");
     autocompleter = new QCheckBox;
-    autocompleter->setChecked(true);
+    //autocompleter->setChecked(Qt::Checked);
     QLabel* autocompleteLabel= new QLabel;
     autocompleteLabel->setText("Autocomplete");
-    //autocompleteLabel->setFont(QFont("Calibri",9));
 
     consoleFooterLayout->addWidget(autocompleter);
     consoleFooterLayout->addWidget(autocompleteLabel);
@@ -28,9 +27,6 @@ ConsoleFooter::ConsoleFooter(QWidget *parent) :
     consoleFooterLayout->addWidget(cleanButton);
     consoleFooterLayout->addWidget(fullScreenButton);
     setLayout(consoleFooterLayout);
-
-    //setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Fixed);
-    //setFixedHeight(50);
 
 }
 
